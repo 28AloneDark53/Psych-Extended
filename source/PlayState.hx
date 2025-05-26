@@ -2818,7 +2818,6 @@ class PlayState extends MusicBeatState
 
 				if (storyPlaylist.length <= 0)
 				{
-					Mods.loadTopMod();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 
 					#if PsychExtended_ExtraTransitions
@@ -2868,7 +2867,6 @@ class PlayState extends MusicBeatState
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
-				Mods.loadTopMod();
 				#if PsychExtended_ExtraTransitions
 				if(FlxTransitionableState.skipNextTransIn && ClientPrefs.data.TransitionStyle == 'NovaFlare')
 					CustomFadeTransitionNOVA.nextCamera = null;
