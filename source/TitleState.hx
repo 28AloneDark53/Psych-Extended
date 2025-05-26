@@ -116,7 +116,6 @@ class TitleState extends HScriptStateHandler
 		#if LUA_ALLOWED
 		Mods.pushGlobalMods();
 		#end
-		Mods.loadTopMod();
 
 		#if SCRIPTING_ALLOWED
 		var className = Type.getClassName(Type.getClass(this));
