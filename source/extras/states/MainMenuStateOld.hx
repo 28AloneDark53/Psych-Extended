@@ -68,7 +68,6 @@ class MainMenuStateOld extends HScriptStateHandler
 		#if MODS_ALLOWED
 		Mods.pushGlobalMods();
 		#end
-		Mods.loadTopMod();
 
 		#if desktop
 		// Updating Discord Rich Presence
