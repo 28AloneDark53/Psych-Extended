@@ -25,17 +25,16 @@ class ExtraFunctions
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra1);
-			else if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra2);
-			else if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra3);
-			else if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra4);
-			else
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.justPressed." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.justPressed." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.justPressed." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.justPressed." + FunkinLua.extra4))
+				return true;
 			#end
-				key = Reflect.getProperty(FlxG.keys.justPressed, name);
+			key = Reflect.getProperty(FlxG.keys.justPressed, name);
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
@@ -43,17 +42,16 @@ class ExtraFunctions
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra1);
-			else if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra2);
-			else if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra3);
-			else if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra4);
-			else
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.pressed." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.pressed." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.pressed." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.pressed." + FunkinLua.extra4))
+				return true;
 			#end
-				key = Reflect.getProperty(FlxG.keys.pressed, name);
+			key = Reflect.getProperty(FlxG.keys.pressed, name);
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
@@ -61,17 +59,16 @@ class ExtraFunctions
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra1);
-			else if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra2);
-			else if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra3);
-			else if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra4);
-			else
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.released." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.released." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.released." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.released." + FunkinLua.extra4))
+				return true;
 			#end
-				key = Reflect.getProperty(FlxG.keys.justReleased, name);
+			key = Reflect.getProperty(FlxG.keys.justReleased, name);
 			return key;
 		});
 
@@ -153,14 +150,14 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra1);
-			if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra2);
-			if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra3);
-			if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.justPressed." + FunkinLua.extra4);
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.justPressed." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.justPressed." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.justPressed." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.justPressed." + FunkinLua.extra4))
+				return true;
 			#end
 			return key;
 		});
@@ -179,14 +176,14 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra1);
-			if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra2);
-			if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra3);
-			if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.pressed." + FunkinLua.extra4);
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.pressed." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.pressed." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.pressed." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.pressed." + FunkinLua.extra4))
+				return true;
 			#end
 			return key;
 		});
@@ -196,7 +193,7 @@ class ExtraFunctions
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_R');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_R');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP_R');
-				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_R');		
+				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_R');
 				case 'space': key = FlxG.keys.justReleased.SPACE;
 				case 'ui_left': key = PlayState.instance.getControl('UI_LEFT_R');
 				case 'ui_down': key = PlayState.instance.getControl('UI_DOWN_R');
@@ -205,14 +202,14 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra1);
-			if (name == FunkinLua.extra2)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra2);
-			if (name == FunkinLua.extra3)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra3);
-			if (name == FunkinLua.extra4)
-				key = specialKeyCheck("keys.released." + FunkinLua.extra4);
+			if (name == FunkinLua.extra1 && specialKeyCheck("keys.released." + FunkinLua.extra1))
+				return true;
+			if (name == FunkinLua.extra2 && specialKeyCheck("keys.released." + FunkinLua.extra2))
+				return true;
+			if (name == FunkinLua.extra3 && specialKeyCheck("keys.released." + FunkinLua.extra3))
+				return true;
+			if (name == FunkinLua.extra4 && specialKeyCheck("keys.released." + FunkinLua.extra4))
+				return true;
 			#end
 			return key;
 		});

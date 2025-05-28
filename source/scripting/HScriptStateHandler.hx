@@ -137,22 +137,20 @@ class HScriptStateHandler extends MusicBeatState
 
 	public function startHScriptsNamed(scriptFile:String)
 	{
-		if (Mods.getTopMod() == Mods.currentModDirectory) {
-			#if MODS_ALLOWED
-			var scriptToLoad:String = Paths.modFolders('scripts/states/' + scriptFile);
-			if(!FileSystem.exists(scriptToLoad))
-				scriptToLoad = Paths.getScriptPath('states/' + scriptFile);
-			#else
-			var scriptToLoad:String = Paths.getScriptPath('states/' + scriptFile);
-			#end
+		#if MODS_ALLOWED
+		var scriptToLoad:String = Paths.modFolders('scripts/states/' + scriptFile);
+		if(!FileSystem.exists(scriptToLoad))
+			scriptToLoad = Paths.getScriptPath('states/' + scriptFile);
+		#else
+		var scriptToLoad:String = Paths.getScriptPath('states/' + scriptFile);
+		#end
 
-			if(FileSystem.exists(scriptToLoad))
-			{
-				if (Iris.instances.exists(scriptToLoad)) return false;
+		if(FileSystem.exists(scriptToLoad))
+		{
+			if (Iris.instances.exists(scriptToLoad)) return false;
 
-				initHScript(scriptToLoad);
-				return true;
-			}
+			initHScript(scriptToLoad);
+			return true;
 		}
 		return false;
 	}
@@ -179,8 +177,7 @@ class HScriptStateHandler extends MusicBeatState
 	}
 
 	public function callOnScripts(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
-		if (Mods.getTopMod() == Mods.currentModDirectory) return callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
-		return null;
+		return callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
 	}
 
 	public function callOnHScript(funcToCall:String, args:Array<Dynamic> = null, ?ignoreStops:Bool = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
@@ -231,7 +228,7 @@ class HScriptStateHandler extends MusicBeatState
 
 	public function setOnScripts(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
 		if(exclusions == null) exclusions = [];
-		if (Mods.getTopMod() == Mods.currentModDirectory) setOnHScript(variable, arg, exclusions);
+		setOnHScript(variable, arg, exclusions);
 	}
 
 	public function setOnHScript(variable:String, arg:Dynamic, exclusions:Array<String> = null) {

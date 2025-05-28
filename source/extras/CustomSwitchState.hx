@@ -4,7 +4,7 @@ import scripting.HScriptClassHandler;
 // This Shit is Not Optimized 😭
 class CustomSwitchState extends HScriptClassHandler
 {
-	function new() {}
+	function new() {super();}
 
 	override public function switchMenusNew(StatePrefix:String, ?skipTrans:Bool = false, ?skipTransCustom:String = '')
 	{

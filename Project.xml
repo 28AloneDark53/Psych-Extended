@@ -76,6 +76,7 @@
 		<define name="TITLE_SCREEN_EASTER_EGG" />
 		<define name="BASE_GAME_ASSETS" />
 	</section>
+	<define name="MULTITHREADED_LOADING" /> <!-- UNCOMMENTING THIS LINE WILL ENABLE MULTITHREADED LOADING, WHICH IMPROVES LOADING TIMES, BUT APPARENTLY CAN FREEZE THE GAME ON SONG LOAD IN OLDER PCs? -->
 	<define name="MODS_ALLOWED" if="desktop || mobile" />
 	<define name="HSCRIPT_ALLOWED" if="desktop || mobile" />
 	<define name="SCRIPTING_ALLOWED" if="desktop || mobile" /> <!-- DELETE THIS TO DISABLE STATE SCRIPTING -->

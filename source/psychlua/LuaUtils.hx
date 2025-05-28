@@ -393,6 +393,9 @@ class LuaUtils
 			// case "texture" | "textureatlas" | "tex":
 				// spr.frames = AtlasFrameMaker.construct(image);
 
+			case 'aseprite' | 'jsoni8':
+				spr.frames = Paths.getAsepriteAtlas(image);
+
 			// case "texture_noaa" | "textureatlas_noaa" | "tex_noaa":
 				// spr.frames = AtlasFrameMaker.construct(image, null, true);
 

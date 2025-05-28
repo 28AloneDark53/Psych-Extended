@@ -46,7 +46,7 @@ class BaseStage extends FlxBasic
 	public var camOther(get, never):FlxCamera;
 
 	public var defaultCamZoom(get, set):Float;
-	public var camFollow(get, never):FlxPoint;
+	public var camFollow(get, never):Dynamic; //FlxPoint is original
 	public var camFollowPos(get, never):FlxObject;
 
 	public function new()
@@ -202,6 +202,6 @@ class BaseStage extends FlxBasic
 		game.defaultCamZoom = value;
 		return game.defaultCamZoom;
 	}
-	inline private function get_camFollow():FlxPoint return game.camFollow;
+	inline private function get_camFollow():Dynamic return game.camFollow;
 	inline private function get_camFollowPos():FlxObject return game.camFollowPos;
 }

@@ -504,6 +504,8 @@ class PlayState extends MusicBeatState
 			case 'school': new School();				//Week 6 - Senpai, Roses
 			case 'schoolEvil': new SchoolEvil();		//Week 6 - Thorns
 			case 'tank': new Tank();					//Week 7 - Ugh, Guns, Stress
+			case 'phillyStreets': new PhillyStreets(); 	//Weekend 1 - Darnell, Lit Up, 2Hot
+			case 'phillyBlazin': new PhillyBlazin();	//Weekend 1 - Blazin
 		}
 
 		if(isPixelStage) {
@@ -1057,6 +1059,7 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
+	var videoCutscene:MP4Handler = null;
 	public function startVideo(name:String)
 	{
 		#if VIDEOS_ALLOWED
@@ -1074,18 +1077,18 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var video:MP4Handler = new MP4Handler();
+		videoCutscene = new MP4Handler();
 		#if (hxCodec < "3.0.0" && !ios)
-		video.playVideo(filepath);
-		video.finishCallback = function()
+		videoCutscene.playVideo(filepath);
+		videoCutscene.finishCallback = function()
 		{
 			startAndEnd();
 			return;
 		}
 		#else
-		video.play(filepath);
-		video.onEndReached.add(function(){
-			video.dispose();
+		videoCutscene.play(filepath);
+		videoCutscene.onEndReached.add(function(){
+			videoCutscene.dispose();
 			startAndEnd();
 			return;
 		});
@@ -1992,12 +1995,17 @@ class PlayState extends MusicBeatState
 		if (startedCountdown)
 		{
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
-			if (Conductor.songPosition >= 0)
+			if(checkIfDesynced)
 			{
-				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
-				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
-				if (timeDiff > 1000 * playbackRate)
-					Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
+				var diff:Float = 20 * playbackRate;
+				var timeSub:Float = Conductor.songPosition - Conductor.offset;
+				if (Math.abs(FlxG.sound.music.time - timeSub) > diff
+					|| (vocals.length > 0 && Math.abs(vocals.time - timeSub) > diff)
+					|| (opponentVocals.length > 0 && Math.abs(opponentVocals.time - timeSub) > diff))
+				{
+					resyncVocals();
+				}
+				checkIfDesynced = false;
 			}
 		}
 
@@ -2860,7 +2868,7 @@ class PlayState extends MusicBeatState
 					Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
-					LoadingState.prepareToSong();
+					if (ClientPrefs.data.loadingScreen) LoadingState.prepareToSong();
 					LoadingState.loadAndSwitchState(new PlayState(), false, false);
 				}
 			}
@@ -3639,9 +3647,12 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
+	var checkIfDesynced:Bool = false;
 	var lastStepHit:Int = -1;
 	override function stepHit()
 	{
+		if (SONG.needsVoices && FlxG.sound.music.time >= -ClientPrefs.data.noteOffset)
+			checkIfDesynced = true;
 
 		super.stepHit();
 

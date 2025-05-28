@@ -14,43 +14,13 @@ class HScriptClassHandler
 	public var hscriptArray:Array<HScript> = [];
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
+	function new() {
+		create();
+	}
+
 	public function create()
 	{
 		instance = this;
-
-		Iris.warn = function(x, ?pos:haxe.PosInfos) {
-			Iris.logLevel(WARN, x, pos);
-			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
-			if (newPos.showLine == true) {
-				msgInfo += '${newPos.lineNumber}:';
-			}
-			msgInfo += ' $x';
-			if (HScriptStateHandler.instance != null) HScriptStateHandler.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
-		}
-		Iris.error = function(x, ?pos:haxe.PosInfos) {
-			Iris.logLevel(ERROR, x, pos);
-			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
-			if (newPos.showLine == true) {
-				msgInfo += '${newPos.lineNumber}:';
-			}
-			msgInfo += ' $x';
-			if (HScriptStateHandler.instance != null) HScriptStateHandler.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
-		}
-		Iris.fatal = function(x, ?pos:haxe.PosInfos) {
-			Iris.logLevel(FATAL, x, pos);
-			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
-			if (newPos.showLine == true) {
-				msgInfo += '${newPos.lineNumber}:';
-			}
-			msgInfo += ' $x';
-			if (HScriptStateHandler.instance != null) HScriptStateHandler.instance.addTextToDebug('FATAL: $msgInfo', 0xFFBB0000);
-		}
 	}
 
 	function destroy() {
@@ -65,24 +35,23 @@ class HScriptClassHandler
 		hscriptArray = null;
 	}
 
-	public function startHScriptsNamed(scriptFile:String)
+	public function startHScriptsNamed(scriptFile:String, ?disableModCheck:Bool = false)
 	{
-		if (Mods.getTopMod() == Mods.currentModDirectory) {
-			#if MODS_ALLOWED
-			var scriptToLoad:String = Paths.modFolders('scripts/classes/' + scriptFile);
-			if(!FileSystem.exists(scriptToLoad))
-				scriptToLoad = Paths.getScriptPath('classes/' + scriptFile);
-			#else
-			var scriptToLoad:String = Paths.getScriptPath('classes/' + scriptFile);
-			#end
+		#if MODS_ALLOWED
+		var scriptToLoad:String = Paths.modFolders('scripts/classes/' + scriptFile);
+		var scriptNotFromFirstEnabledMod:Bool = (FileSystem.exists(scriptToLoad) && Mods.getTopMod() != Mods.currentModDirectory); //Class Special
+		if(!FileSystem.exists(scriptToLoad) || disableModCheck || scriptNotFromFirstEnabledMod)
+			scriptToLoad = Paths.getScriptPath('classes/' + scriptFile);
+		#else
+		var scriptToLoad:String = Paths.getScriptPath('classes/' + scriptFile);
+		#end
 
-			if(FileSystem.exists(scriptToLoad))
-			{
-				if (Iris.instances.exists(scriptToLoad)) return false;
+		if(FileSystem.exists(scriptToLoad))
+		{
+			if (Iris.instances.exists(scriptToLoad)) return false;
 
-				initHScript(scriptToLoad);
-				return true;
-			}
+			initHScript(scriptToLoad);
+			return true;
 		}
 		return false;
 	}
@@ -106,8 +75,7 @@ class HScriptClassHandler
 	}
 
 	public function callOnScripts(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
-		if (Mods.getTopMod() == Mods.currentModDirectory) return callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
-		return null;
+		return callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
 	}
 
 	public function callOnHScript(funcToCall:String, args:Array<Dynamic> = null, ?ignoreStops:Bool = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
@@ -159,7 +127,7 @@ class HScriptClassHandler
 
 	public function setOnScripts(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
 		if(exclusions == null) exclusions = [];
-		if (Mods.getTopMod() == Mods.currentModDirectory) setOnHScript(variable, arg, exclusions);
+		setOnHScript(variable, arg, exclusions);
 	}
 
 	public function setOnHScript(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
