@@ -18,20 +18,24 @@ class ExtraFunctions
 	public static function implement(funk:FunkinLua)
 	{
 		var lua:State = funk.lua;
-		
+
 		// Keyboard & Gamepads
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.justPressed." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.justPressed))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.justPressed." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.justPressed))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.justPressed." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.justPressed))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.justPressed." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.justPressed))
 				return true;
 			#end
 			key = Reflect.getProperty(FlxG.keys.justPressed, name);
@@ -42,13 +46,17 @@ class ExtraFunctions
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.pressed." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.pressed))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.pressed." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.pressed))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.pressed." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.pressed))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.pressed." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.pressed))
 				return true;
 			#end
 			key = Reflect.getProperty(FlxG.keys.pressed, name);
@@ -59,13 +67,17 @@ class ExtraFunctions
 			var key:Bool = false;
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.released." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.justReleased))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.released." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.justReleased))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.released." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.justReleased))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.released." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.justReleased))
 				return true;
 			#end
 			key = Reflect.getProperty(FlxG.keys.justReleased, name);
@@ -150,13 +162,17 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.justPressed." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.justPressed))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.justPressed." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.justPressed))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.justPressed." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.justPressed))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.justPressed." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.justPressed))
 				return true;
 			#end
 			return key;
@@ -176,13 +192,17 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.pressed." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.pressed))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.pressed." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.pressed))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.pressed." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.pressed))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.pressed." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.pressed))
 				return true;
 			#end
 			return key;
@@ -202,13 +222,17 @@ class ExtraFunctions
 			}
 			#if mobile
 			name = name.toUpperCase();
-			if (name == FunkinLua.extra1 && specialKeyCheck("keys.released." + FunkinLua.extra1))
+			if (name == FunkinLua.extra1 && (MusicBeatState.mobilec.newhbox.buttonExtra1 != null && MusicBeatState.mobilec.newhbox.buttonExtra1.released 
+				|| MusicBeatState.mobilec.vpad.buttonExtra1 != null && MusicBeatState.mobilec.vpad.buttonExtra1.released))
 				return true;
-			if (name == FunkinLua.extra2 && specialKeyCheck("keys.released." + FunkinLua.extra2))
+			if (name == FunkinLua.extra2 && (MusicBeatState.mobilec.newhbox.buttonExtra2 != null && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra2 != null && MusicBeatState.mobilec.vpad.buttonExtra2.justReleased))
 				return true;
-			if (name == FunkinLua.extra3 && specialKeyCheck("keys.released." + FunkinLua.extra3))
+			if (name == FunkinLua.extra3 && (MusicBeatState.mobilec.newhbox.buttonExtra3 != null && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra3 != null && MusicBeatState.mobilec.vpad.buttonExtra3.justReleased))
 				return true;
-			if (name == FunkinLua.extra4 && specialKeyCheck("keys.released." + FunkinLua.extra4))
+			if (name == FunkinLua.extra4 && (MusicBeatState.mobilec.newhbox.buttonExtra4 != null && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased 
+				|| MusicBeatState.mobilec.vpad.buttonExtra4 != null && MusicBeatState.mobilec.vpad.buttonExtra4.justReleased))
 				return true;
 			#end
 			return key;
@@ -389,12 +413,10 @@ class ExtraFunctions
 		var key:String = textfix[2].trim();
 		var extraControl:Dynamic = null;
 
-		for (num in 1...5){
+		for (num in 5...21){
 			if (ClientPrefs.data.extraKeys >= num && key == Reflect.field(ClientPrefs.data, 'extraKeyReturn' + num)){
 				if (MusicBeatState.mobilec.newhbox != null)
 					extraControl = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);
-				else
-					extraControl = Reflect.getProperty(MusicBeatState.mobilec.vpad, 'buttonExtra' + num);
 				if (Reflect.getProperty(extraControl, type))
 					return true;
 			}

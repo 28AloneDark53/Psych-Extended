@@ -36,6 +36,8 @@ class MobileOptionsSubState extends BaseOptionsMenu
 	var virtualpadSkinList:Array<String> = CoolUtil.coolTextFile(Paths.getSharedPath('images/virtualpad/virtualpadSkinList'));
 	var virtualpadSkinListModsFolder:Array<String> = CoolUtil.coolTextFile(Paths.modsTxt('virtualpad/virtualpadSkinList'));
 
+	var HitboxTypes:Array<String>;
+
 	public function new()
 	{
 		#if android
@@ -43,6 +45,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		#end
 		title = 'Mobile Options';
 		rpcTitle = 'Mobile Options Menu'; //hi, you can ask what is that, i will answer it's all what you needed lol.
+		HitboxTypes = Mods.mergeAllTextsNamed('mobile/HitBoxModes/hitboxModeList.txt');
 
 		if (ClientPrefs.data.virtualpadTexture == 'TouchPad')
 			virtualpadSkinList = CoolUtil.coolTextFile(Paths.getPreloadPath('images/touchpad/touchpadSkinList.txt'));
@@ -118,14 +121,16 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		'string',
 		['Bottom', 'Top', 'Middle']);
 	addOption(option);
-		  
+
+	HitboxTypes.insert(0, "New");
+	HitboxTypes.insert(0, "Classic");
 	var option:Option = new Option('Hitbox Mode:',
 		"Choose your Hitbox Style!  -mariomaster",
 		'hitboxmode',
 		'string',
-		['Classic', 'New']);
+		HitboxTypes);
 	addOption(option);
-		  
+
 	var option:Option = new Option('Hitbox Design:',
 		"Choose how your hitbox should look like.",
 		'hitboxtype',

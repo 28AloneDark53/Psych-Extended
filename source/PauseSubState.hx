@@ -2,6 +2,7 @@ package;
 
 import flixel.util.FlxStringUtil;
 import options.OptionsState;
+import editors.ChartingState;
 
 class PauseSubState extends HScriptSubStateHandler
 {
@@ -295,6 +296,7 @@ class PauseSubState extends HScriptSubStateHandler
 				case "Leave Charting Mode":
 					restartSong();
 					PlayState.chartingMode = false;
+					ChartingState.curSec = 0;
 				case 'Skip Time':
 					if(curTime < Conductor.songPosition)
 					{

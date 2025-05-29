@@ -1,0 +1,68 @@
+{
+  "buttons": [
+    {
+      "button": "buttonLeft",
+      "x": 0,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0xFFC24B99"
+    },
+    {
+      "button": "buttonDown",
+      "x": 160,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0xFF00FFFF"
+    },
+    {
+      "button": "buttonUp",
+      "x": 320,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0xFF12FA05"
+    },
+    {
+      "button": "buttonRight",
+      "x": 480,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0xFFF9393F"
+    },
+    {
+      "button": "buttonExtra1",
+      "x": 640,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "FFFF00"
+    },
+    {
+      "button": "buttonExtra2",
+      "x": 800,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "a917e2"
+    },
+    {
+      "button": "buttonExtra3",
+      "x": 960,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0xFFF9393F"
+    },
+    {
+      "button": "buttonExtra4",
+      "x": 1120,
+      "y": 0,
+      "width": 160,
+      "height": 720,
+      "color": "0000FF"
+    }
+  ]
+}

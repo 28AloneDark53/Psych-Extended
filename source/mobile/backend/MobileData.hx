@@ -10,6 +10,7 @@ class MobileData
 {
 	public static var actionModes:Map<String, VirtualButtonsData> = new Map();
 	public static var dpadModes:Map<String, VirtualButtonsData> = new Map();
+	public static var hitboxModes:Map<String, CustomHitboxData> = new Map();
 	public static var extraActions:Map<String, ExtraActions> = new Map();
 
 	public static var mode(get, set):Int;
@@ -22,11 +23,13 @@ class MobileData
 		save.bind('MobileControls', CoolUtil.getSavePath());
 
 		readDirectory(Paths.getPreloadPath('mobile/DPadModes'), dpadModes);
+		readDirectory(Paths.getPreloadPath('mobile/HitboxModes'), hitboxModes);
 		readDirectory(Paths.getPreloadPath('mobile/ActionModes'), actionModes);
 		#if MODS_ALLOWED
 		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'mobile/'))
 		{
 			readDirectory(Path.join([folder, 'DPadModes']), dpadModes);
+			readDirectory(Path.join([folder, 'HitboxModes']), hitboxModes);
 			readDirectory(Path.join([folder, 'ActionModes']), actionModes);
 		}
 		#end
@@ -117,6 +120,21 @@ class MobileData
 typedef VirtualButtonsData =
 {
 	buttons:Array<ButtonsData>
+}
+
+typedef CustomHitboxData =
+{
+	buttons:Array<HitboxData>
+}
+
+typedef HitboxData =
+{
+	button:String, // what VirtualButton should be used, must be a valid VirtualButton var from VirtualPad as a string.
+	x:Float, // the button's X position on screen.
+	y:Float, // the button's Y position on screen.
+	width:Int, // the button's Width on screen.
+	height:Int, // the button's Height on screen.
+	color:String // the button color, default color is white.
 }
 
 typedef ButtonsData =

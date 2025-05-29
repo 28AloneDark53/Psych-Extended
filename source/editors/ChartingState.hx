@@ -1948,6 +1948,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE || _virtualpad.buttonB.justPressed) {
 				autosaveSong();
+				resetSection(true);
 
 				PlayState.chartingMode = false;
 				if (isFreePlay)

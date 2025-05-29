@@ -391,6 +391,12 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
+	public static function fileExistsInAssets(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String = null)
+	{
+		if(OpenFlAssets.exists(getPath(key, type, null, true))) return true;
+		return false;
+	}
+
 	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String = null)
 	{
 		#if MODS_ALLOWED

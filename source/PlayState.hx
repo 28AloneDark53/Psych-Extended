@@ -493,6 +493,11 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
+		if (ClientPrefs.data.UseNewCamSystem)
+			camFollow = new FlxObject(0, 0, 1, 1);
+		else
+			camFollow = new FlxPoint();
+
 		switch (curStage)
 		{
 			case 'stage': new StageWeek1(); 			//Week 1
@@ -649,7 +654,6 @@ class PlayState extends MusicBeatState
 
 		if (ClientPrefs.data.UseNewCamSystem)
 		{
-			camFollow = new FlxObject(0, 0, 1, 1);
 			camFollow.setPosition(camPos.x, camPos.y);
 			if (prevCamFollow != null)
 			{
@@ -659,7 +663,6 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			camFollow = new FlxPoint();
 			camFollowPos = new FlxObject(0, 0, 1, 1);
 
 			snapCamFollowToPos(camPos.x, camPos.y);
@@ -767,7 +770,7 @@ class PlayState extends MusicBeatState
 
 		addMobileControls();
 		MusicBeatState.mobilec.visible = false;
-		if (ClientPrefs.data.hitboxmode == 'New' && !ClientPrefs.data.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
+		if (ClientPrefs.data.hitboxmode != 'Classic' && !ClientPrefs.data.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
 		startingSong = true;
 
 		#if LUA_ALLOWED
@@ -1912,6 +1915,7 @@ class PlayState extends MusicBeatState
 	public var canReset:Bool = true;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
+	public var lerpVal:Float; //get Lerp and use it for fixing Weekend 1 Camera issue
 
 	override public function update(elapsed:Float)
 	{
@@ -1922,13 +1926,20 @@ class PlayState extends MusicBeatState
 
 		if (ClientPrefs.data.UseNewCamSystem)
 			FlxG.camera.followLerp = 0;
+		else {
+			//this one can fix the camera issue
+			if (curStage == "phillyStreets" || curStage == "phillyBlazin") {
+				lerpVal = 0;
+				camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+			}
+		}
 
 		if(!inCutscene && !paused) {
 			if (ClientPrefs.data.UseNewCamSystem)
 				FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
 			else
 			{
-				var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
+				lerpVal = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
 				camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 			}
 			if(!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
@@ -2645,7 +2656,7 @@ class PlayState extends MusicBeatState
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
-	function moveCameraSection(?sec:Null<Int>):Void {
+	function moveCameraSection(?sec:Null<Int>, ?weekendFix:Bool):Void {
 		if(sec == null) sec = curSection;
 		if(sec < 0) sec = 0;
 
@@ -2664,6 +2675,11 @@ class PlayState extends MusicBeatState
 				camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
 				camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 				camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+				if (camFollowPos != null && weekendFix) {
+					camFollowPos.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
+					camFollowPos.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
+					camFollowPos.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+				}
 			}
 			tweenCamIn();
 			callOnScripts('onMoveCamera', ['gf']);
@@ -2671,12 +2687,12 @@ class PlayState extends MusicBeatState
 		}
 
 		var isDad:Bool = (SONG.notes[sec].mustHitSection != true);
-		moveCamera(isDad);
+		moveCamera(isDad, weekendFix);
 		callOnScripts('onMoveCamera', [isDad ? 'dad' : 'boyfriend']);
 	}
 
 	var cameraTwn:FlxTween;
-	public function moveCamera(isDad:Bool)
+	public function moveCamera(isDad:Bool, ?weekendFix:Bool)
 	{
 		if(isDad)
 		{
@@ -2688,9 +2704,16 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-				camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
-				camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+				if (camFollowPos != null && weekendFix) {
+					camFollowPos.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+					camFollowPos.x += dad.cameraPosition[0] + opponentCameraOffset[0];
+					camFollowPos.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+				}
+				else {
+					camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+					camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
+					camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+				}
 			}
 			tweenCamIn();
 		}
@@ -2704,9 +2727,16 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
-				camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
-				camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+				if (camFollowPos != null && weekendFix) {
+					camFollowPos.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+					camFollowPos.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
+					camFollowPos.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+				}
+				else {
+					camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+					camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
+					camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+				}
 			}
 
 			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
@@ -4230,6 +4260,12 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 	#end
+
+	public static function checkHBoxPress(button:String, type = 'justPressed') {
+		var button = Reflect.getProperty(MusicBeatState.mobilec.newhbox, button); //Access Spesific Hitbox Button
+		return Reflect.getProperty(button, type);
+		return false;
+	}
 
 	public function changeControls(?mode:Int = -1)
 	{

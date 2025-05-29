@@ -13,6 +13,27 @@ class MobileFunctions
 		#if LUA_ALLOWED
 		var lua:State = funk.lua;
 
+		//Use them for 8k charts or something
+		Lua_helper.add_callback(lua, 'HitboxPressed', function(button:String):Bool
+		{
+			return PlayState.checkHBoxPress(button, 'pressed');
+		});
+
+		Lua_helper.add_callback(lua, 'HitboxJustPressed', function(button:String):Bool
+		{
+			return PlayState.checkHBoxPress(button, 'justPressed');
+		});
+
+		Lua_helper.add_callback(lua, 'HitboxReleased', function(button:String):Bool
+		{
+			return PlayState.checkHBoxPress(button, 'released');
+		});
+
+		Lua_helper.add_callback(lua, 'HitboxJustReleased', function(button:String):Bool
+		{
+			return PlayState.checkHBoxPress(button, 'justReleased');
+		});
+
 		#if LUAVPAD_ALLOWED
 		//OMG
 		Lua_helper.add_callback(lua, 'virtualPadPressed', function(buttonPostfix:String):Bool

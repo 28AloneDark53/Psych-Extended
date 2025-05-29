@@ -161,7 +161,8 @@ class Tank extends BaseStage
 			gf.animation.finishCallback = null;
 			gf.dance();
 		};
-		camFollow.set(dad.x + 280, dad.y + 170);
+		if (ClientPrefs.data.UseNewCamSystem) game.camFollow.setPosition(dad.x + 280, dad.y + 170);
+		else game.camFollow.set(dad.x + 280, dad.y + 170);
 	}
 
 	function ughIntro()
@@ -190,8 +191,8 @@ class Tank extends BaseStage
 		// Move camera to BF
 		cutsceneHandler.timer(3, function()
 		{
-			camFollow.x += 750;
-			camFollow.y += 100;
+			game.camFollow.x += 750;
+			game.camFollow.y += 100;
 		});
 
 		// Beep!
@@ -205,8 +206,8 @@ class Tank extends BaseStage
 		// Move camera to Tankman
 		cutsceneHandler.timer(6, function()
 		{
-			camFollow.x -= 750;
-			camFollow.y -= 100;
+			game.camFollow.x -= 750;
+			game.camFollow.y -= 100;
 
 			// We should just kill you but... what the hell, it's been a boring day... let's see what you've got!
 			tankman.anim.play('killYou', true);
@@ -252,7 +253,8 @@ class Tank extends BaseStage
 		cutsceneHandler.endTime = 35.5;
 		gfGroup.alpha = 0.00001;
 		boyfriendGroup.alpha = 0.00001;
-		camFollow.set(dad.x + 400, dad.y + 170);
+		if (ClientPrefs.data.UseNewCamSystem) game.camFollow.setPosition(dad.x + 400, dad.y + 170);
+		else game.camFollow.set(dad.x + 400, dad.y + 170);
 		FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2}, 1, {ease: FlxEase.quadInOut});
 		foregroundSprites.forEach(function(spr:BGSprite)
 		{
@@ -295,7 +297,7 @@ class Tank extends BaseStage
 
 		cutsceneHandler.timer(15.2, function()
 		{
-			FlxTween.tween(camFollow, {x: 650, y: 300}, 1, {ease: FlxEase.sineOut});
+			FlxTween.tween(game.camFollow, {x: 650, y: 300}, 1, {ease: FlxEase.sineOut});
 			FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 2.25, {ease: FlxEase.quadInOut});
 
 			pico.anim.play('dieBitch', true);
@@ -340,7 +342,8 @@ class Tank extends BaseStage
 
 		cutsceneHandler.timer(20, function()
 		{
-			camFollow.set(dad.x + 500, dad.y + 170);
+			if (ClientPrefs.data.UseNewCamSystem) game.camFollow.setPosition(dad.x + 500, dad.y + 170);
+			else game.camFollow.set(dad.x + 500, dad.y + 170);
 		});
 
 		cutsceneHandler.timer(31.2, function()
@@ -355,7 +358,8 @@ class Tank extends BaseStage
 				}
 			};
 
-			camFollow.set(boyfriend.x + 280, boyfriend.y + 200);
+			if (ClientPrefs.data.UseNewCamSystem) game.camFollow.setPosition(boyfriend.x + 280, boyfriend.y + 200);
+			else game.camFollow.set(boyfriend.x + 280, boyfriend.y + 200);
 			FlxG.camera.snapToTarget();
 			game.cameraSpeed = 12;
 			FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 0.25, {ease: FlxEase.elasticOut});
@@ -370,7 +374,8 @@ class Tank extends BaseStage
 	function zoomBack()
 	{
 		var calledTimes:Int = 0;
-		camFollow.set(630, 425);
+		if (ClientPrefs.data.UseNewCamSystem) game.camFollow.setPosition(630, 425);
+		else game.camFollow.set(630, 425);
 		FlxG.camera.snapToTarget();
 		FlxG.camera.zoom = 0.8;
 		game.cameraSpeed = 1;

@@ -24,6 +24,22 @@ class FlxNewHitbox extends FlxSpriteGroup
 	public var buttonExtra2:VirtualButton = new VirtualButton(0, 0);
 	public var buttonExtra3:VirtualButton = new VirtualButton(0, 0);
 	public var buttonExtra4:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra5:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra6:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra7:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra8:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra9:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra10:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra11:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra12:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra13:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra14:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra15:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra16:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra17:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra18:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra19:VirtualButton = new VirtualButton(0, 0);
+	public var buttonExtra20:VirtualButton = new VirtualButton(0, 0);
 	public static var hitbox_hint:FlxSprite;
 
 	/**
@@ -32,7 +48,18 @@ class FlxNewHitbox extends FlxSpriteGroup
 	public function new(?MobileCType:Float = -1):Void
 	{
 		super();
-		if (ClientPrefs.data.extraKeys == 0 && MobileCType == -1 || MobileCType == 0){
+		if (ClientPrefs.data.hitboxmode != 'New' && ClientPrefs.data.hitboxmode != 'Classic'){
+			if (!MobileData.hitboxModes.exists(ClientPrefs.data.hitboxmode))
+				throw 'The Custom Hitbox File doesn\'t exists.';
+
+			for (buttonData in MobileData.hitboxModes.get(ClientPrefs.data.hitboxmode).buttons)
+			{
+				Reflect.setField(this, buttonData.button,
+					createHint(buttonData.x, buttonData.y, buttonData.width, buttonData.height, CoolUtil.colorFromString(buttonData.color)));
+				add(Reflect.field(this, buttonData.button));
+			}
+		}
+		else if (ClientPrefs.data.extraKeys == 0 && MobileCType == -1 || MobileCType == 0){
 			add(buttonLeft = createHint(0, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFFC24B99));
 			add(buttonDown = createHint(FlxG.width / 4, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFF00FFFF));
 			add(buttonUp = createHint(FlxG.width / 2, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFF12FA05));
@@ -153,6 +180,10 @@ class FlxNewHitbox extends FlxSpriteGroup
 		buttonExtra2 = null;
 		buttonExtra3 = null;
 		buttonExtra4 = null;
+		
+		for (field in Reflect.fields(this))
+			if (Std.isOfType(Reflect.field(this, field), MobileButton))
+				Reflect.setField(this, field, FlxDestroyUtil.destroy(Reflect.field(this, field)));
 	}
 
 	private function createHintGraphic(Width:Int, Height:Int, Color:Int = 0xFFFFFF):BitmapData

@@ -57,8 +57,8 @@ class MusicBeatSubstate extends FlxSubState
 				controls.setVirtualPadNOTES(mobilec.vpad, "DUO", "NONE");
 				MusicBeatState.checkHitbox = false;
 			case HITBOX:
-				if(ClientPrefs.data.hitboxmode == 'New') controls.setNewHitBox(mobilec.newhbox);
-				else controls.setHitBox(mobilec.hbox);
+				if(ClientPrefs.data.hitboxmode == 'Classic') controls.setHitBox(mobilec.hbox);
+				else controls.setNewHitBox(mobilec.newhbox);
 				MusicBeatState.checkHitbox = true;
 			default:
 		}
