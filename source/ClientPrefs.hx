@@ -31,6 +31,7 @@ import TitleState;
 	public var chartLoadSystem:String = '0.4-0.7x';
 	//end
 	public var Modpack:Bool = false;
+	public var BetterSync:Bool = true;
 	public var wideScreen:Bool = false;
 	public var mobileC:Bool = true; //better than using if mobile
 	#if android public var storageType:String = "EXTERNAL_DATA"; #end

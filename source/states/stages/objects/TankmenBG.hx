@@ -1,6 +1,5 @@
 package states.stages.objects;
 
-
 class TankmenBG extends FlxSprite
 {
 	public static var animationNotes:Array<Dynamic> = [];

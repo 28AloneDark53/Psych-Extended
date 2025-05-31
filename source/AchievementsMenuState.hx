@@ -316,11 +316,12 @@ class ResetAchievementSubstate extends MusicBeatSubstate
 		noText.scrollFactor.set();
 		add(noText);
 		updateOptions();
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
 	override function update(elapsed:Float)
 	{
-		if(controls.BACK || FlxG.mouse.overlaps(noText) && FlxG.mouse.justPressed && ClientPrefs.data.mobileC)
+		if(controls.BACK)
 		{
 			close();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -332,12 +333,30 @@ class ResetAchievementSubstate extends MusicBeatSubstate
 		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 			onYes = !onYes;
 			updateOptions();
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
 
 		if(controls.ACCEPT)
 			onYesFunction();
-		
-		if(FlxG.mouse.overlaps(yesText) && FlxG.mouse.justPressed && ClientPrefs.data.mobileC) { onYes = true; onYesFunction(); }
+
+		if(FlxG.mouse.overlaps(yesText) && ClientPrefs.data.mobileC) {
+			if (!onYes) FlxG.sound.play(Paths.sound('scrollMenu'));
+			onYes = true;
+			updateOptions();
+			if (FlxG.mouse.justPressed) onYesFunction();
+		}
+
+		if(FlxG.mouse.overlaps(noText) && ClientPrefs.data.mobileC)
+		{
+			if (onYes) FlxG.sound.play(Paths.sound('scrollMenu'));
+			onYes = false;
+			updateOptions();
+			if (FlxG.mouse.justPressed) {
+				close();
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+			}
+			return;
+		}
 	}
 
 	function updateOptions() {
@@ -345,16 +364,15 @@ class ResetAchievementSubstate extends MusicBeatSubstate
 		var alphas:Array<Float> = [0.6, 1.25];
 		var confirmInt:Int = onYes ? 1 : 0;
 
-		yesText.alpha = 1.25;
-		yesText.scale.set(1, 1);
-		noText.alpha = 1.25;
-		noText.scale.set(1, 1);
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		yesText.alpha = alphas[confirmInt];
+		yesText.scale.set(scales[confirmInt], scales[confirmInt]);
+		noText.alpha = alphas[1 - confirmInt];
+		noText.scale.set(scales[1 - confirmInt], scales[1 - confirmInt]);
 	}
-	
+
 	function onYesFunction()
 	{
-	    if(onYes)
+		if(onYes)
 		{
 			var state:AchievementsMenuState = cast FlxG.state;
 			var option:Dynamic = state.options[state.curSelected];

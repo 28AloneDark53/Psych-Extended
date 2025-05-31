@@ -129,12 +129,28 @@ typedef CustomHitboxData =
 
 typedef HitboxData =
 {
-	button:String, // what VirtualButton should be used, must be a valid VirtualButton var from VirtualPad as a string.
+	button:String, // what Hitbox Button should be used, must be a valid Hitbox Button var from NewHitbox as a string.
+	//if nothing is setted these will be used
 	x:Float, // the button's X position on screen.
 	y:Float, // the button's Y position on screen.
 	width:Int, // the button's Width on screen.
 	height:Int, // the button's Height on screen.
-	color:String // the button color, default color is white.
+	color:String, // the button color, default color is white.
+	//Top
+	topX:Null<Float>,
+	topY:Null<Float>,
+	topWidth:Null<Int>,
+	topHeight:Null<Int>,
+	//Middle
+	middleX:Null<Float>,
+	middleY:Null<Float>,
+	middleWidth:Null<Int>,
+	middleHeight:Null<Int>,
+	//Bottom
+	bottomX:Null<Float>,
+	bottomY:Null<Float>,
+	bottomWidth:Null<Int>,
+	bottomHeight:Null<Int>
 }
 
 typedef ButtonsData =

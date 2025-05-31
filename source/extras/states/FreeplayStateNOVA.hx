@@ -421,7 +421,8 @@ class FreeplayStateNOVA extends HScriptStateHandler
 		{
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			Song.loadFromJson(poop, songLowercase);
+			if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songLowercase);
+			else PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
 		}
@@ -802,7 +803,8 @@ class FreeplayStateNOVA extends HScriptStateHandler
 				try
 				{
 					var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-					Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+					else PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 
 					if (PlayState.SONG.needsVoices)
 					{

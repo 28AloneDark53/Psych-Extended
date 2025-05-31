@@ -223,7 +223,7 @@ class StoryMenuState extends HScriptStateHandler
 
 		// FlxG.watch.addQuick('font', scoreText.font);
 
-		if (!movedBack && !selectedWeek && !Warning.WarningIsVisible)
+		if (!movedBack && !selectedWeek)
 		{
 			var upP = controls.UI_UP_P;
 			var downP = controls.UI_DOWN_P;
@@ -279,47 +279,15 @@ class StoryMenuState extends HScriptStateHandler
 		
 				else if (FlxG.mouse.overlaps(grpWeekText.members[curWeek]) && FlxG.mouse.justPressed || controls.ACCEPT)
 				{
-					#if BASE_GAME_ASSETS
-					/*
-					var weekendPosition:Int = 8;
-					var deletedWeeks:Array<String> = [];
-					if (!Paths.fileExists('weeks/tutorial.json', TEXT)) deletedWeeks += "tutorial";
-					if (!Paths.fileExists('weeks/week1.json', TEXT)) deletedWeeks += "week1";
-					if (!Paths.fileExists('weeks/week2.json', TEXT)) deletedWeeks += "week2";
-					if (!Paths.fileExists('weeks/week3.json', TEXT)) deletedWeeks += "week3";
-					if (!Paths.fileExists('weeks/week4.json', TEXT)) deletedWeeks += "week4";
-					if (!Paths.fileExists('weeks/week5.json', TEXT)) deletedWeeks += "week5";
-					if (!Paths.fileExists('weeks/week6.json', TEXT)) deletedWeeks += "week6";
-					if (!Paths.fileExists('weeks/week7.json', TEXT)) deletedWeeks += "week7";
-					if (deletedWeeks != [] && deletedWeeks != null) {
-						weekendPosition -= deletedWeeks.length;
-					}
-
-					if (grpWeekText.members[curWeek] == grpWeekText.members[weekendPosition] && !Paths.fileExistsInAssets('weeks/weekend1')) //Weekend 1 check
-					{
-						removeVirtualPad();
-						addVirtualPad("NONE", "B");
-						Warning.create("Please Enable Experimental Cameras and use 1.0 Chart System, Otherwise Weekend 1 doesn't work");
-						addVirtualPadCamera();
-					}
-					else
-					*/
-					#end
-						selectWeek();
+					selectWeek();
 				}
 		}
 
-		if ((controls.BACK || Swipe.Right) && !movedBack && !selectedWeek && !Warning.WarningIsVisible)
+		if ((controls.BACK || Swipe.Right) && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			CustomSwitchState.switchMenus('MainMenu');
-		}
-
-		if (controls.BACK && Warning.WarningIsVisible) {
-			removeVirtualPad();
-			addVirtualPad("NONE", "B_X_Y");
-			Warning.destroy();
 		}
 
 		super.update(elapsed);
@@ -360,7 +328,8 @@ class StoryMenuState extends HScriptStateHandler
 
 				PlayState.storyDifficulty = curDifficulty;
 
-				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+				if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+				else PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 				PlayState.campaignScore = 0;
 				PlayState.campaignMisses = 0;
 			}

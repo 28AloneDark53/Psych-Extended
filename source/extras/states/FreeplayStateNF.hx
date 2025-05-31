@@ -824,7 +824,8 @@ class FreeplayStateNF extends HScriptStateHandler {
 	{
 		destroyFreeplayVocals();
 		var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-		Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+		if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+		else PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 
 		if (PlayState.SONG.needsVoices)
 		{
@@ -1236,7 +1237,8 @@ class FreeplayStateNF extends HScriptStateHandler {
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 				try
 				{
-					Song.loadFromJson(poop, songLowercase);
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songLowercase);
+					else PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 					PlayState.isStoryMode = false;
 					PlayState.storyDifficulty = curDifficulty;
 
@@ -1401,7 +1403,8 @@ class FreeplayStateNF extends HScriptStateHandler {
 				case 3: // idk
 					var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 					var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-					Song.loadFromJson(poop, songLowercase);
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songLowercase);
+					else PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 					PlayState.isStoryMode = false;
 					PlayState.storyDifficulty = curDifficulty;
 					if(colorTween != null) colorTween.cancel();

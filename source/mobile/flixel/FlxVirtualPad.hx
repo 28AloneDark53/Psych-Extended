@@ -7,28 +7,10 @@ import openfl.utils.Assets;
 
 typedef MobileButton = VirtualButton; // don't judge me for this
 
+//More button support (Some buttons doesn't have a texture)
+@:build(mobile.flixel.MobileMacro.createVPadButtons(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]))
+@:build(mobile.flixel.MobileMacro.createExtraVPadButtons(30)) //Psych Extended Allows to Create 30 Extra Button with Json for now
 class FlxVirtualPad extends FlxSpriteGroup {
-	//Actions
-	public var buttonA:MobileButton = new MobileButton(0, 0);
-	public var buttonB:MobileButton = new MobileButton(0, 0);
-	public var buttonC:MobileButton = new MobileButton(0, 0);
-	public var buttonD:MobileButton = new MobileButton(0, 0);
-	public var buttonE:MobileButton = new MobileButton(0, 0);
-	public var buttonM:MobileButton = new MobileButton(0, 0);
-	public var buttonP:MobileButton = new MobileButton(0, 0);
-	public var buttonV:MobileButton = new MobileButton(0, 0);
-	public var buttonX:MobileButton = new MobileButton(0, 0);
-	public var buttonY:MobileButton = new MobileButton(0, 0);
-	public var buttonZ:MobileButton = new MobileButton(0, 0);
-	public var buttonF:MobileButton = new MobileButton(0, 0);
-	public var buttonG:MobileButton = new MobileButton(0, 0);
-	
-	//Extra
-    public var buttonExtra1:MobileButton = new MobileButton(0, 0);
-	public var buttonExtra2:MobileButton = new MobileButton(0, 0);
-	public var buttonExtra3:MobileButton = new MobileButton(0, 0);
-	public var buttonExtra4:MobileButton = new MobileButton(0, 0);
-    
 	//DPad
 	public var buttonLeft:MobileButton = new MobileButton(0, 0);
 	public var buttonUp:MobileButton = new MobileButton(0, 0);
@@ -40,7 +22,7 @@ class FlxVirtualPad extends FlxSpriteGroup {
 	public var buttonUp2:MobileButton = new MobileButton(0, 0);
 	public var buttonRight2:MobileButton = new MobileButton(0, 0);
 	public var buttonDown2:MobileButton = new MobileButton(0, 0);
-    
+
 	public var buttonCEUp:MobileButton = new MobileButton(0, 0);
 	public var buttonCEDown:MobileButton = new MobileButton(0, 0);
 	public var buttonCEG:MobileButton = new MobileButton(0, 0);

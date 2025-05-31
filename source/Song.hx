@@ -116,30 +116,30 @@ class Song
 				}
 			}
 		}
-		
+
 		var sectionsData:Array<SwagSection> = songJson.notes;
 		if (ClientPrefs.data.chartLoadSystem == '1.0x')
 		{
-    		if(sectionsData == null) return;
-    		for (section in sectionsData)
-    		{
-    			var beats:Null<Float> = cast section.sectionBeats;
-    			if (beats == null || Math.isNaN(beats))
-    			{
-    				section.sectionBeats = 4;
-    				if(Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');
-    			}
-    			for (note in section.sectionNotes)
-    			{
-    				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
-    				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
-    				if(note[3] != null && !Std.isOfType(note[3], String))
-    					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
-    			}
-    		}
+			if(sectionsData == null) return;
+			for (section in sectionsData)
+			{
+				var beats:Null<Float> = cast section.sectionBeats;
+				if (beats == null || Math.isNaN(beats))
+				{
+					section.sectionBeats = 4;
+					if(Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');
+				}
+				for (note in section.sectionNotes)
+				{
+					var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
+					note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
+					if(note[3] != null && !Std.isOfType(note[3], String))
+						note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
+				}
+			}
 		}
 	}
-	
+
 	private static function onLoadJson(songJson:Dynamic) // This is 0.6.3 Chart Load System Because Chart Editor Doesn't Support 1.0 Charts
 	{
 		if(songJson.gfVersion == null)
@@ -147,12 +147,14 @@ class Song
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
 		}
+
 		if(songJson.events == null)
 		{
 			songJson.events = [];
 			for (secNum in 0...songJson.notes.length)
 			{
 				var sec:SwagSection = songJson.notes[secNum];
+
 				var i:Int = 0;
 				var notes:Array<Dynamic> = sec.sectionNotes;
 				var len:Int = notes.length;
@@ -170,7 +172,7 @@ class Song
 			}
 		}
 	}
-	
+
 	public function new(?song, ?notes, ?bpm)
 	{
 		this.song = song;
@@ -178,87 +180,86 @@ class Song
 		this.bpm = bpm;
 	}
 
-    public static var chartPath:String;
-    public static var loadedSongName:String;
-    //I Don't have a better way to do this 😭
-    /* Fuck This Shit I'm Out
-	public static function loadOldChartFromJson(jsonInput:String, ?folder:String, ?inChartEditor:Bool = false):SwagSong
-	{
-	    
-	}
-	*/
+	public static var chartPath:String;
+	public static var loadedSongName:String;
 	public static function parseJSONshit(rawJson:String):SwagSong
 	{
 		var swagShit:SwagSong = cast Json.parse(rawJson).song;
 		swagShit.validScore = true;
 		return swagShit;
 	}
-	
+
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-	    if (ClientPrefs.data.chartLoadSystem == '1.0x')
-	    {
-	        trace('Current Chart System: 1.0');
-    		if(folder == null) folder = jsonInput;
-        	PlayState.SONG = getChart(jsonInput, folder);
-        	loadedSongName = folder;
-        	chartPath = _lastPath.replace('/', '\\');
-        	if(jsonInput != 'events') StageData.loadDirectory(PlayState.SONG);
-        	return PlayState.SONG; 
-	    }
-	    else
-	    {
+		if (ClientPrefs.data.chartLoadSystem == '1.0x')
+		{
+			trace('Current Chart System: 1.0');
+			if(folder == null) folder = jsonInput;
+			PlayState.SONG = getChart(jsonInput, folder);
+			loadedSongName = folder;
+			chartPath = _lastPath.replace('/', '\\');
+			if(jsonInput != 'events') StageData.loadDirectory(PlayState.SONG);
+			return PlayState.SONG; 
+		}
+		else
+		{
 			trace('Current Chart System: 0.4-0.7x');
 			var rawJson = null;
-			
+
 			var formattedFolder:String = Paths.formatToSongPath(folder);
 			var formattedSong:String = Paths.formatToSongPath(jsonInput);
-    		
+
 			#if MODS_ALLOWED
 			var moddyFile:String = Paths.modsJson('$formattedFolder/$formattedSong');
-    		if(FileSystem.exists(moddyFile)) {
-    			rawJson = File.getContent(moddyFile).trim();
-    		}
-    		#end
-    		
-    		if(rawJson == null) {
-    		    var path:String = Paths.json('$formattedFolder/$formattedSong');
-    		    
-    			#if sys
-    			if(FileSystem.exists(path))
-    				rawJson = File.getContent(path);
-    			else
-    			#end
-    				rawJson = Assets.getText(path);
-    		}
-    		
-    		PlayState.SONG = parseJSONshit(rawJson);
-    		loadedSongName = folder;
-    		if(jsonInput != 'events') StageData.loadDirectory(PlayState.SONG);
-    		onLoadJson(PlayState.SONG);
-    		return PlayState.SONG;
-    	}
+			if(FileSystem.exists(moddyFile)) {
+				rawJson = File.getContent(moddyFile).trim();
+			}
+			#end
+
+			if(rawJson == null) {
+				var path:String = Paths.json('$formattedFolder/$formattedSong');
+				
+				#if sys
+				if(FileSystem.exists(path))
+					rawJson = File.getContent(path);
+				else
+				#end
+					rawJson = Assets.getText(path);
+			}
+			
+			while (!rawJson.endsWith("}"))
+			{
+				rawJson = rawJson.substr(0, rawJson.length - 1);
+				// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
+			}
+
+			var songJson:Dynamic = parseJSONshit(rawJson);
+			loadedSongName = folder;
+			if(jsonInput != 'events') StageData.loadDirectory(songJson);
+			onLoadJson(songJson);
+			return songJson;
+		}
 	}
-	
+
 	static var _lastPath:String;
 	public static function getChart(jsonInput:String, ?folder:String):SwagSong
 	{
 		if(folder == null) folder = jsonInput;
 		var rawData:String = null;
-		
+
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
-		
+
 		#if MODS_ALLOWED
 		_lastPath = Paths.modsJson('$formattedFolder/$formattedSong');
 		if(FileSystem.exists(_lastPath))
 			rawData = File.getContent(_lastPath);
 		#end
-		    
+
 		//Base Songs
 		if(rawData == null)
 		{
-		    _lastPath = Paths.json('$formattedFolder/$formattedSong');
+			_lastPath = Paths.json('$formattedFolder/$formattedSong');
 			#if sys
 			if(FileSystem.exists(_lastPath))
 				rawData = File.getContent(_lastPath);

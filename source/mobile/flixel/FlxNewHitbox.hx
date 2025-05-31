@@ -13,77 +13,77 @@ import openfl.geom.Matrix;
  *
  * @author Mihai Alexandru (M.A. Jigsaw)
  */
+@:build(mobile.flixel.MobileMacro.createExtraHitboxButtons(30))
 class FlxNewHitbox extends FlxSpriteGroup
 {
 	public var buttonLeft:VirtualButton = new VirtualButton(0, 0);
 	public var buttonDown:VirtualButton = new VirtualButton(0, 0);
 	public var buttonUp:VirtualButton = new VirtualButton(0, 0);
 	public var buttonRight:VirtualButton = new VirtualButton(0, 0);
-	
-	public var buttonExtra1:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra2:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra3:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra4:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra5:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra6:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra7:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra8:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra9:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra10:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra11:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra12:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra13:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra14:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra15:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra16:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra17:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra18:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra19:VirtualButton = new VirtualButton(0, 0);
-	public var buttonExtra20:VirtualButton = new VirtualButton(0, 0);
+
 	public static var hitbox_hint:FlxSprite;
 
 	/**
 	 * Create the zone.
 	 */
-	public function new(?MobileCType:Float = -1):Void
+	public function new(?MobileCType:String):Void
 	{
 		super();
-		if (ClientPrefs.data.hitboxmode != 'New' && ClientPrefs.data.hitboxmode != 'Classic'){
-			if (!MobileData.hitboxModes.exists(ClientPrefs.data.hitboxmode))
+		if (ClientPrefs.data.hitboxhint && ClientPrefs.data.hitboxLocation != 'Bottom'){
+			hitbox_hint = new FlxSprite(0, 0).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
+			add(hitbox_hint);
+		}
+		if ((ClientPrefs.data.hitboxmode != 'New' && ClientPrefs.data.hitboxmode != 'Classic' && MobileCType == null) || MobileCType != null){
+			var Custom:String = MobileCType != null ? MobileCType : ClientPrefs.data.hitboxmode;
+			if (!MobileData.hitboxModes.exists(Custom))
 				throw 'The Custom Hitbox File doesn\'t exists.';
 
-			for (buttonData in MobileData.hitboxModes.get(ClientPrefs.data.hitboxmode).buttons)
+			for (buttonData in MobileData.hitboxModes.get(Custom).buttons)
 			{
+				var location = ClientPrefs.data.hitboxLocation;
+				var buttonX = buttonData.x;
+				var buttonY = buttonData.y;
+				var buttonWidth = buttonData.width;
+				var buttonHeight = buttonData.height;
+				//Less Optimized but works
+				switch (location) {
+					case 'Top':
+						if (buttonData.topX != null) buttonX = buttonData.topX;
+						if (buttonData.topY != null) buttonY = buttonData.topY;
+						if (buttonData.topWidth != null) buttonWidth = buttonData.topWidth;
+						if (buttonData.topHeight != null) buttonHeight = buttonData.topHeight;
+					case 'Middle':
+						if (buttonData.middleX != null) buttonX = buttonData.middleX;
+						if (buttonData.middleY != null) buttonY = buttonData.middleY;
+						if (buttonData.middleWidth != null) buttonWidth = buttonData.middleWidth;
+						if (buttonData.middleHeight != null) buttonHeight = buttonData.middleHeight;
+					case 'Bottom':
+						if (buttonData.bottomX != null) buttonX = buttonData.bottomX;
+						if (buttonData.bottomY != null) buttonY = buttonData.bottomY;
+						if (buttonData.bottomWidth != null) buttonWidth = buttonData.bottomWidth;
+						if (buttonData.bottomHeight != null) buttonHeight = buttonData.bottomHeight;
+				}
+
 				Reflect.setField(this, buttonData.button,
-					createHint(buttonData.x, buttonData.y, buttonData.width, buttonData.height, CoolUtil.colorFromString(buttonData.color)));
+					createHint(buttonX, buttonY, buttonWidth, buttonHeight, CoolUtil.colorFromString(buttonData.color)));
 				add(Reflect.field(this, buttonData.button));
 			}
 		}
-		else if (ClientPrefs.data.extraKeys == 0 && MobileCType == -1 || MobileCType == 0){
+		else if (ClientPrefs.data.extraKeys == 0){
 			add(buttonLeft = createHint(0, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFFC24B99));
 			add(buttonDown = createHint(FlxG.width / 4, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFF00FFFF));
 			add(buttonUp = createHint(FlxG.width / 2, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFF12FA05));
 			add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 1), 0xFFF9393F));
-			if (ClientPrefs.data.hitboxhint){
-				hitbox_hint = new FlxSprite(0, 0).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
-				add(hitbox_hint);
-			}
 		}else {
 			if (ClientPrefs.data.hitboxLocation == 'Bottom') {
 				add(buttonLeft = createHint(0, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFFC24B99));
 				add(buttonDown = createHint(FlxG.width / 4, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF00FFFF));
 				add(buttonUp = createHint(FlxG.width / 2, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF12FA05));
 				add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFFF9393F));
-				if (ClientPrefs.data.hitboxhint){
-					hitbox_hint = new FlxSprite(0, -150).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
-					add(hitbox_hint);
-				}
+				hitbox_hint = new FlxSprite(0, -150).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
+				add(hitbox_hint);
 
-				var customKeys = ClientPrefs.data.extraKeys;
-				if (MobileCType != -1) customKeys = Std.int(MobileCType);
-				if (MobileCType == 1.1)
-					add(buttonExtra1 = createHint(0, (FlxG.height / 5) * 4, FlxG.width, Std.int(FlxG.height / 5), 0xFF0000));
-				switch (customKeys) {
+				switch (ClientPrefs.data.extraKeys) {
 					case 1:
 						add(buttonExtra1 = createHint(0, (FlxG.height / 5) * 4, FlxG.width, Std.int(FlxG.height / 5), 0xFFFF00));
 					case 2:
@@ -104,16 +104,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 				add(buttonDown = createHint(FlxG.width / 4, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF00FFFF));
 				add(buttonUp = createHint(FlxG.width / 2, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF12FA05));
 				add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFFF9393F));
-				if (ClientPrefs.data.hitboxhint){
-					hitbox_hint = new FlxSprite(0, 0).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
-					add(hitbox_hint);
-				}
 
-				var customKeys = ClientPrefs.data.extraKeys;
-				if (MobileCType != -1) customKeys = Std.int(MobileCType);
-				if (MobileCType == 1.1)
-					add(buttonExtra1 = createHint(0, 0, FlxG.width, Std.int(FlxG.height / 5), 0xFF0000));
-				switch (customKeys) {
+				switch (ClientPrefs.data.extraKeys) {
 					case 1:
 						add(buttonExtra1 = createHint(0, 0, FlxG.width, Std.int(FlxG.height / 5), 0xFFFF00));
 					case 2:
@@ -134,16 +126,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 				add(buttonDown = createHint(FlxG.width / 5 * 1, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FFFF));
 				add(buttonUp = createHint(FlxG.width / 5 * 3, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FF00));
 				add(buttonRight = createHint(FlxG.width / 5 * 4 , 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFF0000));
-				if (ClientPrefs.data.hitboxhint){
-					hitbox_hint = new FlxSprite(0, 0).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
-					add(hitbox_hint);
-				}
 
-				var customKeys = ClientPrefs.data.extraKeys;
-				if (MobileCType != -1) customKeys = Std.int(MobileCType);
-				if (MobileCType == 1.1)
-					add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFF0000));
-				switch (customKeys) {
+				switch (ClientPrefs.data.extraKeys) {
 					case 1:
 						add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFFFF00));
 					case 2:

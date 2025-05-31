@@ -247,6 +247,7 @@ class PhillyStreets extends BaseStage
 	{
 		game.moveCamera(false);
 		camFollow.x += 250;
+		camFollowPos.x = camFollow.x;
 		FlxG.camera.snapToTarget();
 		FlxG.camera.zoom = 1.3;
 		spraycan.cutscene = true;

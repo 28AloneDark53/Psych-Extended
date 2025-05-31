@@ -42,6 +42,12 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'bool');
 		addOption(option);
 
+		var option:Option = new Option('Better Sync',
+			"If checked, game continues the last song position before freezing\n(Disable this if you're using Low-End Phone)",
+			'BetterSync',
+			'bool');
+		addOption(option);
+
 		var option:Option = new Option('HScript Version:',
 			"If You Have A Any Problem With Mods Change This",
 			'hscriptversion',

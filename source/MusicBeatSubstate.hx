@@ -48,7 +48,7 @@ class MusicBeatSubstate extends FlxSubState
 	public function addMobileControls() {
 		mobilec = new MobileControls();
 
-		switch (mobilec.mode)
+		switch (MobileControls.mode)
 		{
 			case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
 				controls.setVirtualPadNOTES(mobilec.vpad, "FULL", "NONE");

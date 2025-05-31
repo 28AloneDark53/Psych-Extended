@@ -78,10 +78,10 @@ class MusicBeatState extends FlxUIState
 			remove(mobilec);
 	}
 
-	public function addMobileControls(?mode:Float = -1) {
+	public function addMobileControls(?mode:String) {
 		mobilec = new MobileControls(mode);
 
-		switch (mobilec.mode)
+		switch (MobileControls.mode)
 		{
 			case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
 				controls.setVirtualPadNOTES(mobilec.vpad, "FULL", "NONE");

@@ -93,16 +93,17 @@ class Config {
 }
 
 class MobileControls extends FlxSpriteGroup {
-	public var mode:ControlsGroup = HITBOX;
+	public static var mode:ControlsGroup = HITBOX;
 
 	public var hbox:FlxHitbox;
 	public var newhbox:FlxNewHitbox;
 	public var vpad:FlxVirtualPad;
+	public var current:CurrentManager;
 
 	var config:Config;
 	var extendConfig:Config;
 
-	public function new(?CustomMode:Float = -1) {
+	public function new(?CustomMode:String) {
 		super();
 
 		config = new Config('saved-controls');
@@ -125,9 +126,10 @@ class MobileControls extends FlxSpriteGroup {
 			case KEYBOARD:
 				// nothing
 		}
+		current = new CurrentManager(this);
 	}
 
-	function initControler(vpadMode:Int, ?CustomMode:Float = -1) {
+	function initControler(vpadMode:Int, ?CustomMode:String) {
 		switch (vpadMode){
 			case 0:
 				vpad = new FlxVirtualPad("RIGHT_FULL", "controlExtend", false, true);
@@ -150,7 +152,8 @@ class MobileControls extends FlxSpriteGroup {
 				hbox = new FlxHitbox(0.75, ClientPrefs.data.antialiasing);
 				add(hbox);
 			case 5:
-				newhbox = new FlxNewHitbox(CustomMode);
+				if (CustomMode != null) newhbox = new FlxNewHitbox(CustomMode);
+				else newhbox = new FlxNewHitbox();
 				add(newhbox);
 			default:
 				newhbox = new FlxNewHitbox();
@@ -168,7 +171,7 @@ class MobileControls extends FlxSpriteGroup {
 				VIRTUALPAD_CUSTOM;
 			case 3: 
 				DUO;
-			case 4:	
+			case 4:
 				HITBOX;
 			case 5: 
 				KEYBOARD;
@@ -185,4 +188,37 @@ enum ControlsGroup {
 	DUO;
 	HITBOX;
 	KEYBOARD;
+}
+
+class CurrentManager {
+	public var buttonLeft:VirtualButton;
+	public var buttonDown:VirtualButton;
+	public var buttonUp:VirtualButton;
+	public var buttonRight:VirtualButton;
+	public var buttonExtra1:VirtualButton;
+	public var buttonExtra2:VirtualButton;
+	public var buttonExtra3:VirtualButton;
+	public var buttonExtra4:VirtualButton;
+
+	public function new(control:MobileControls){
+		if(MobileControls.mode == HITBOX) {
+			buttonLeft = control.newhbox.buttonLeft;
+			buttonDown = control.newhbox.buttonDown;
+			buttonUp = control.newhbox.buttonUp;
+			buttonRight = control.newhbox.buttonRight;
+			buttonExtra1 = control.newhbox.buttonExtra1;
+			buttonExtra2 = control.newhbox.buttonExtra2;
+			buttonExtra3 = control.newhbox.buttonExtra3;
+			buttonExtra4 = control.newhbox.buttonExtra4;
+		} else {
+			buttonLeft = control.vpad.buttonLeft;
+			buttonDown = control.vpad.buttonDown;
+			buttonUp = control.vpad.buttonUp;
+			buttonRight = control.vpad.buttonRight;
+			buttonExtra1 = control.vpad.buttonExtra1;
+			buttonExtra2 = control.vpad.buttonExtra2;
+			buttonExtra3 = control.vpad.buttonExtra3;
+			buttonExtra4 = control.vpad.buttonExtra4;
+		}
+	}
 }

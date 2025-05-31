@@ -350,7 +350,8 @@ class FreeplayState extends HScriptStateHandler
 
 				Mods.currentModDirectory = songs[curSelected].folder;
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-				Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+				if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+				else PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
 				{
 					try
@@ -423,7 +424,8 @@ class FreeplayState extends HScriptStateHandler
 
 			try
 			{
-				Song.loadFromJson(poop, songLowercase);
+				if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, songLowercase);
+				else PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 

@@ -420,22 +420,24 @@ class Character extends FlxSprite
 	{
 		try
 		{
-		    if (ClientPrefs.data.chartLoadSystem == '1.0x')
-		    {
-			var songData:SwagSong = Song.getChart('picospeaker', Paths.formatToSongPath(Song.loadedSongName));
-			if(songData != null)
-				for (section in songData.notes)
-					for (songNotes in section.sectionNotes)
-						animationNotes.push(songNotes);
+			if (ClientPrefs.data.chartLoadSystem == '1.0x')
+			{
+				var songData:SwagSong = Song.getChart('picospeaker', Paths.formatToSongPath(Song.loadedSongName));
+				if(songData != null)
+					for (section in songData.notes)
+						for (songNotes in section.sectionNotes)
+							animationNotes.push(songNotes);
 			}
 			else
 			{
-			var noteData:Array<SwagSection> = Song.loadFromJson('picospeaker', Paths.formatToSongPath(PlayState.SONG.song)).notes;
-			for (section in noteData)
-				for (songNotes in section.sectionNotes)
-					animationNotes.push(songNotes);
+				var noteData:Array<SwagSection> = Song.loadFromJson('picospeaker', Paths.formatToSongPath(PlayState.SONG.song)).notes;
+				for (section in noteData) {
+					for (songNotes in section.sectionNotes) {
+						animationNotes.push(songNotes);
+					}
+				}
 			}
-					
+
 			TankmenBG.animationNotes = animationNotes;
 			animationNotes.sort(sortAnims);
 		}

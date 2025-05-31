@@ -682,7 +682,8 @@ class PauseSubStateNOVA extends HScriptSubStateHandler
 				try{
 					var name:String = PlayState.SONG.song;
 					var poop = Highscore.formatSong(name, difficultyCurSelected);
-					Song.loadFromJson(poop, name);
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') Song.loadFromJson(poop, name);
+					else PlayState.SONG = Song.loadFromJson(poop, name);
 					PlayState.storyDifficulty = difficultyCurSelected;
 					MusicBeatState.resetState();
 					FlxG.sound.music.volume = 0;

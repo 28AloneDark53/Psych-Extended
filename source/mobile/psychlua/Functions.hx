@@ -86,12 +86,12 @@ class MobileFunctions
 			if (ClientPrefs.data.mobileC) MusicBeatState.mobilec.visible = enabled;
 		});
 
-		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:Int = -1):Void
+		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
 		{
 			PlayState.instance.changeControls(mode);
 		});
 
-		Lua_helper.add_callback(lua, "addMobileControls", function(?mode:Int = -1):Void
+		Lua_helper.add_callback(lua, "addMobileControls", function(?mode:String):Void
 		{
 			PlayState.instance.addControls(mode);
 		});
