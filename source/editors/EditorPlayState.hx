@@ -164,7 +164,7 @@ class EditorPlayState extends MusicBeatSubstate
 		DiscordClient.changePresence('Playtesting on Chart Editor', PlayState.SONG.song, null, true, songLength);
 		#end
 
-		#if !android
+		#if (!android && TOUCH_CONTROLS)
 		addMobilePad("NONE", "P");
 		addMobilePadCamera();
 		#end
@@ -174,7 +174,7 @@ class EditorPlayState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		if(#if android FlxG.android.justReleased.BACK #else touchPad.buttonP.justPressed #end || FlxG.keys.justPressed.ESCAPE)
+		if(#if android FlxG.android.justReleased.BACK #else #if TOUCH_CONTROLS _virtualpad.buttonP.justPressed #end #end || FlxG.keys.justPressed.ESCAPE)
 		{
 			#if TOUCH_CONTROLS
 			MusicBeatState.mobilec.visible = false;
