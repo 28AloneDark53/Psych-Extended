@@ -4,12 +4,14 @@ package extras;
 import scripting.HScript;
 #end
 import funkin.backend.scripting.events.CancellableEvent;
+import editors.ChartingState;
+import editors.ChartingStateNew;
 
 // This Shit is Not Optimized 😭
 class CustomSwitchState
 {
 	var eventStop:Bool = false;
-	public function switchMenusNew(StatePrefix:String, ?skipTrans:Bool = false, ?skipTransCustom:String = '')
+	public function switchMenusNew(StatePrefix:String, ?useLoadandSwitch:Bool = false)
 	{
 		#if SCRIPTING_ALLOWED
 		loadScript('classes/CustomSwitchState');
@@ -18,8 +20,6 @@ class CustomSwitchState
 		call("switchMenus", [StatePrefix, eventStop]);
 
 		FunkinLua.FPSCounterText = null;
-		if (skipTransCustom == 'TransIn' || skipTrans) FlxTransitionableState.skipNextTransIn = true;
-		if (skipTransCustom == 'TransOut' || skipTrans) FlxTransitionableState.skipNextTransOut = true;
 
 		var CP = ClientPrefs.data;
 		var switchState = MusicBeatState.switchState;
@@ -50,6 +50,12 @@ class CustomSwitchState
 					switchState(new editors.MasterEditorMenu());
 				case 'NoteOffset':
 					switchState(new options.NoteOffsetState());
+				case 'Charting':
+					//1.0 Chart Editor Support, Let's gooooo
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') switchState(new ChartingStateNew());
+					else if(useLoadandSwitch && ClientPrefs.data.chartLoadSystem == '1.0x') LoadingState.loadAndSwitchState(new ChartingStateNew(), false);
+					else if(useLoadandSwitch) LoadingState.loadAndSwitchState(new ChartingState());
+					else switchState(new ChartingState());
 				case 'ModsMenu':
 					switchState(new ModsMenuState());
 				#if ACHIEVEMENTS_ALLOWED
@@ -63,10 +69,11 @@ class CustomSwitchState
 		destroy(); //destroy HScript Later switching
 	}
 
-	public static function switchMenus(StatePrefix:String, ?skipTrans:Bool = false, ?skipTransCustom:String = '') //do not break the Mods
+	//Automatic Instance Creator
+	public static function switchMenus(StatePrefix:String, ?useLoadandSwitch:Bool = false)
 	{
 		var createInstance:CustomSwitchState = new CustomSwitchState();
-		createInstance.switchMenusNew(StatePrefix, skipTrans, skipTransCustom);
+		createInstance.switchMenusNew(StatePrefix, useLoadandSwitch);
 	}
 
 	public function destroy() {

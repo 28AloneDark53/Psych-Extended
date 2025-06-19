@@ -102,7 +102,7 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	public static function getPath(file:String, ?type:AssetType = TEXT, ?library:Null<String> = null, ?modsAllowed:Bool = false):String
+	public static function getPath(file:String, ?type:AssetType = TEXT, ?library:Null<String> = null, ?modsAllowed:Bool = true):String
 	{
 		#if MODS_ALLOWED
 		if(modsAllowed)
@@ -268,12 +268,23 @@ class Paths
 		if(postfix != null) songKey += '-' + postfix;
 		var voices = returnSound(null, songKey, 'songs');
 
-		var songKeyDiff:String = '${formatToSongPath(song)}/Voices-$diff';
+		var songKeyDiff:String = '${formatToSongPath(song)}/${diff}/Voices';
 		if(postfix != null) songKeyDiff += '-' + postfix;
+
+		#if ERECT_SONGS
+		var Nightmare:String = '${formatToSongPath(song)}/Nightmare/Voices';
+		if(postfix != null) Nightmare += '-' + postfix;
+
+		if (songKeyDiff.toLowerCase() == Nightmare.toLowerCase() && (checkSound(null, songKeyDiff, 'songs') == false || returnSound(null, songKeyDiff, 'songs') != null)) {
+			songKeyDiff = '${formatToSongPath(song)}/erect/Voices';
+			if(postfix != null) songKeyDiff += '-' + postfix;
+		}
+		#end
+
 		var voicesDiff = returnSound(null, songKeyDiff, 'songs');
 
-		if (voicesDiff != null) return voicesDiff;
-		return voices;
+		if (checkSound(null, songKeyDiff, 'songs') == true || voicesDiff != null) return voicesDiff;
+		else return voices;
 	}
 
 	inline static public function inst(song:String):Sound
@@ -282,11 +293,18 @@ class Paths
 		var songKey:String = '${formatToSongPath(song)}/Inst';
 		var inst = returnSound(null, songKey, 'songs');
 
-		var songKeyDiff:String = '${formatToSongPath(song)}/Inst-$diff';
+		var songKeyDiff:String = '${formatToSongPath(song)}/${diff}/Inst';
+
+		#if ERECT_SONGS
+		var Nightmare:String = '${formatToSongPath(song)}/Nightmare/Inst';
+		if (songKeyDiff.toLowerCase() == Nightmare.toLowerCase() && (checkSound(null, songKeyDiff, 'songs') == false || returnSound(null, songKeyDiff, 'songs') != null))
+			songKeyDiff = '${formatToSongPath(song)}/erect/Inst';
+		#end
+
 		var instDiff = returnSound(null, songKeyDiff, 'songs');
 
-		if (instDiff != null) return instDiff;
-		return inst;
+		if (checkSound(null, songKeyDiff, 'songs') == true || instDiff != null) return instDiff;
+		else return inst;
 	}
 
 	inline static public function image(key:String, ?library:String, ?extraLoad:Bool = false):FlxGraphic
@@ -576,6 +594,30 @@ class Paths
 		}
 		localTrackedAssets.push(gottenPath);
 		return currentTrackedSounds.get(gottenPath);
+	}
+
+	public static function checkSound(path:Null<String>, key:String, ?library:String) {
+		#if MODS_ALLOWED
+		var modLibPath:String = '';
+		if (library != null) modLibPath = '$library/';
+		if (path != null) modLibPath += '$path';
+
+		var file:String = modsSounds(modLibPath, key);
+		if(FileSystem.exists(file)) {
+			return true;
+		}
+		#end
+
+		// I hate this so god damn much
+		var gottenPath:String = '$key.$SOUND_EXT';
+		if(path != null) gottenPath = '$path/$gottenPath';
+		gottenPath = getPath(gottenPath, SOUND, library);
+		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		// trace(gottenPath);
+		var retKey:String = (path != null) ? '$path/$key' : key;
+		retKey = ((path == 'songs') ? 'songs:' : '') + getPath('$retKey.$SOUND_EXT', SOUND, library);
+		if(OpenFlAssets.exists(retKey, SOUND)) return true;
+		return false;
 	}
 
 	static public function getFolderContent(key:String, addPath:Bool = false, source:String = "BOTH"):Array<String> {

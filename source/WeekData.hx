@@ -14,6 +14,7 @@ typedef WeekFile =
 {
 	// JSON variables
 	var songs:Array<Dynamic>;
+	var erectSongs:Array<Dynamic>;
 	var weekCharacters:Array<String>;
 	var weekBackground:String;
 	var weekBefore:String;
@@ -34,6 +35,7 @@ class WeekData {
 	
 	// JSON variables
 	public var songs:Array<Dynamic>;
+	public var erectSongs:Array<Dynamic>;
 	public var weekCharacters:Array<String>;
 	public var weekBackground:String;
 	public var weekBefore:String;
@@ -51,6 +53,7 @@ class WeekData {
 	public static function createWeekFile():WeekFile {
 		var weekFile:WeekFile = {
 			songs: [["Bopeebo", "face", [146, 113, 253]], ["Fresh", "face", [146, 113, 253]], ["Dad Battle", "face", [146, 113, 253]]],
+			erectSongs: [["Bopeebo", "face", [146, 113, 253]], ["Fresh", "face", [146, 113, 253]], ["Dad Battle", "face", [146, 113, 253]]], //same lol :)
 			#if BASE_GAME_FILES
 			weekCharacters: ['dad', 'bf', 'gf'],
 			#else
@@ -73,6 +76,7 @@ class WeekData {
 	// HELP: Is there any way to convert a WeekFile to WeekData without having to put all variables there manually? I'm kind of a noob in haxe lmao
 	public function new(weekFile:WeekFile, fileName:String) {
 		songs = weekFile.songs;
+		erectSongs = weekFile.erectSongs;
 		weekCharacters = weekFile.weekCharacters;
 		weekBackground = weekFile.weekBackground;
 		weekBefore = weekFile.weekBefore;
@@ -107,10 +111,20 @@ class WeekData {
 		for (i in 0...sexList.length) {
 			for (j in 0...directories.length) {
 				var fileToCheck:String = directories[j] + 'weeks/' + sexList[i] + '.json';
+				var fileToCheckFreeplay:String = directories[j] + 'weeks/freeplay/' + sexList[i] + '.json';
 				if(!weeksLoaded.exists(sexList[i])) {
 					var week:WeekFile = getWeekFile(fileToCheck);
-					if(week != null) {
-						var weekFile:WeekData = new WeekData(week, sexList[i]);
+					var weekFreeplay:WeekFile = getWeekFile(fileToCheckFreeplay);
+					if(week != null || weekFreeplay != null) {
+						var weekFile:WeekData;
+						if (FileSystem.exists(fileToCheckFreeplay)) {
+							weekFile = new WeekData(weekFreeplay, sexList[i]);
+							//trace('freeplay is: ${weekFreeplay} || ${sexList[i]}');
+						}
+						else {
+							weekFile = new WeekData(week, sexList[i]);
+							//trace('global is: ${week} || ${sexList[i]}');
+						}
 
 						#if MODS_ALLOWED
 						if(j >= originalLength) {
@@ -130,6 +144,7 @@ class WeekData {
 		#if MODS_ALLOWED
 		for (i in 0...directories.length) {
 			var directory:String = directories[i] + 'weeks/';
+			var directoryFreeplay:String = directories[i] + 'weeks/freeplay';
 			if(FileSystem.exists(directory)) {
 				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
 				for (daWeek in listOfWeeks)

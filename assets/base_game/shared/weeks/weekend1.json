@@ -19,6 +19,6 @@
 	"startUnlocked": true,
 
 	"hideStoryMode": false,
-	"hideFreeplay": false,
+	"hideFreeplay": true,
 	"difficulties": "Easy, Normal, Hard"
 }

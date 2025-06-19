@@ -57,11 +57,15 @@ class HealthIcon extends FlxSprite
 		}
 	}
 
+	public var autoAdjustOffset:Bool = true;
 	override function updateHitbox()
 	{
 		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+		if(autoAdjustOffset)
+		{
+			offset.x = iconOffsets[0];
+			offset.y = iconOffsets[1];
+		}
 	}
 
 	public function getCharacter():String {

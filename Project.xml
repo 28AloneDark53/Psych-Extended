@@ -7,6 +7,11 @@
 	<!--Debug Build Things -->
 	<app title="FNF': Psych Extended Debug" file="PsychExtended" packageName="com.kraloyuncu.psychextended.debug" package="com.kraloyuncu.psychextended.debug" main="Main" version="0.2.8" company="KralOyuncu" if="debugBuild"/>
 
+	<!-- ADB Things (doesn't work)-->
+	<android debuggable="true" />
+	<android allowBackup="true" />
+	<android extractNativeLibs="true" />
+
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
@@ -53,10 +58,13 @@
 	</section>
 
 	<classpath name="source" />
-	<classpath name="library" /> <!-- For experimental things -->
+	<classpath name="library" /> <!-- Library changes -->
+	<classpath name="erect_source" if="ERECT_SONGS"/> <!-- Fuck it -->
 
 	<!-- PSYCH EXTENDED CUSTOMIZATION -->
 	<define name="COMPILE_CLASSES" />
+	<!-- <define name="ERECT_SONGS" /> --> <!-- UNCOMMENTING THIS LINE WILL ENABLE ERECT SONGS (NOT RECOMMEND) -->
+	<define name="DISABLE_EGGNOG_ERECT_CUTSCENE" />
 	<define name="PSYCH_EXTENDED_NOTESKINS" /> <!-- Better Note Skin Changing Test (I took this from another Modified Psych) -->
 	<!-- PSYCH EXTENDED EXTRAS -->
 	<define name="PsychExtended_ExtraFreeplayMenus" unless="extras_disabled"/> <!-- DELETE THIS IF YOU WANT TO REMOVE EXTRA FREEPLAY MENUS IN YOUR BUILD -->
@@ -93,13 +101,21 @@
 	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
 	<section if="BASE_GAME_ASSETS">
-	<assets path="assets/base_game/videos"         rename="assets/videos"         library="videos"        if="VIDEOS_ALLOWED"/>
-	<assets path="assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
-	<assets path="assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/base_game/shared"         rename="assets/shared"         exclude="*.ogg" if="web"/>
-	<assets path="assets/base_game/shared"         rename="assets/shared"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.ogg" if="web"/>
-	<assets path="assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.mp3" unless="web"/>
+		<assets path="assets/base_game/videos"         rename="assets/videos"         library="videos"        if="VIDEOS_ALLOWED"/>
+		<assets path="assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
+		<assets path="assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/base_game/shared"         rename="assets/shared"         exclude="*.ogg" if="web"/>
+		<assets path="assets/base_game/shared"         rename="assets/shared"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.ogg" if="web"/>
+		<assets path="assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.mp3" unless="web"/>
+		<section if="ERECT_SONGS">
+			<assets path="erect_assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
+			<assets path="erect_assets/base_game/songs"          rename="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
+			<assets path="erect_assets/base_game/shared"         rename="assets/shared"         exclude="*.ogg" if="web"/>
+			<assets path="erect_assets/base_game/shared"         rename="assets/shared"         exclude="*.mp3" unless="web"/>
+			<assets path="erect_assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.ogg" if="web"/>
+			<assets path="erect_assets/base_game/week_assets"   library="week_assets"           rename="assets/week_assets"       exclude="*.mp3" unless="web"/>
+		</section>
 	</section>
 
 	<!-- Psych Extended Assets -->
@@ -161,7 +177,8 @@
 
 	<!-- Extra packages-->
 	<haxelib name="grig.audio" />
-	<haxelib name="flxanimate"/>
+	<haxelib name="flxanimate" unless="termux"/>
+	<haxelib name="FlxAnimate" if="termux"/>
 	<haxelib name="funkin.vis"/>
 
 	<!-- Enables a terminal log prompt on debug builds -->
@@ -228,6 +245,8 @@
 	</section>
 
 	<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.initMacros()" />
+	<!-- This macro allows addition of new functionality to existing Flixel. -->
+	<haxeflag name="--macro" value="addMetadata('@:build(funkin.backend.system.macros.IndexMacro.buildFlxBasic())', 'flixel.FlxBasic')" />
 
 	<!--Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')" />
@@ -238,18 +257,8 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-
-	<section if="mobile">
-		<!-- Better Icon Quality -->
-		<icon path="art/iconOG.png" size='16'/>
-		<icon path="art/iconOG.png" size='32'/>
-		<icon path="art/iconOG.png" size='64'/>
-		<icon path="art/iconOG.png" />
-	</section>
-	<section unless="mobile">
-		<icon path="art/icon16.png" size='16'/>
-		<icon path="art/icon32.png" size='32'/>
-		<icon path="art/icon64.png" size='64'/>
-		<icon path="art/iconOG.png" />
-	</section>
+	<icon path="art/icon16.png" size='16'/>
+	<icon path="art/icon32.png" size='32'/>
+	<icon path="art/icon64.png" size='64'/>
+	<icon path="art/iconOG.png" />
 </project>

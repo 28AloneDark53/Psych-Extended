@@ -80,6 +80,12 @@ class FPSPsych extends TextField
 
 	public dynamic function updateText():Void
 	{
+		//don't ask why
+		#if (debugBuild && android)
+			if (FlxG.android.justReleased.BACK)
+				FlxG.debugger.visible = !FlxG.debugger.visible;
+		#end
+
 	    FPSThing = '$currentFPSForLUA';
 	    if (FunkinLua.FPSCounterText == null) {
     		text = 

@@ -2,7 +2,8 @@ package backend.ui;
 
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
-import openfl.events.KeyboardEvent;
+import flixel.util.FlxDestroyUtil;
+import flash.events.KeyboardEvent;
 import lime.system.Clipboard;
 
 enum abstract AccentCode(Int) from Int from UInt to Int to UInt
@@ -375,7 +376,10 @@ class PsychUIInputText extends FlxSpriteGroup
 	}
 
 	public dynamic function onPressEnter(e:KeyboardEvent)
+	{
+		FlxG.stage.window.textInputEnabled = false;
 		focusOn = null;
+	}
 
 	public var unfocus:Void->Void;
 	public static function set_focusOn(v:PsychUIInputText)
@@ -404,11 +408,13 @@ class PsychUIInputText extends FlxSpriteGroup
 				FlxG.stage.window.textInputEnabled = true;
 				caretIndex = 0;
 				var lastBound:Float = 0;
-				var txtX:Float = textObj.x - textObj.textField.scrollH;
+				var textObjX:Float = textObj.getScreenPosition(camera).x;
+				var mousePosX:Float = FlxG.mouse.getScreenPosition(camera).x;
+				var txtX:Float = textObjX - textObj.textField.scrollH;
 
 				for (i => bound in _boundaries)
 				{
-					if(FlxG.mouse.screenX >= txtX + (bound - lastBound)/2)
+					if(mousePosX >= txtX + (bound - lastBound)/2)
 					{
 						caretIndex = i+1;
 						txtX += bound - lastBound;
@@ -660,7 +666,7 @@ class PsychUIInputText extends FlxSpriteGroup
 
 		var letter:String = String.fromCharCode(charCode);
 		letter = filter(letter);
-		if(letter.length > 0 && (maxLength == 0 || (text.length + letter.length) < maxLength))
+		if(letter.length > 0 && (maxLength == 0 || (text.length + letter.length) <= maxLength))
 		{
 			var lastText = text;
 			//trace('Drawing character: $letter');
@@ -729,7 +735,7 @@ class PsychUIInputText extends FlxSpriteGroup
 				case CUSTOM_FILTER:
 					pattern = customFilterPattern;
 				default:
-					throw new openfl.errors.Error("FlxInputText: Unknown filterMode (" + filterMode + ")");
+					throw new flash.errors.Error("FlxInputText: Unknown filterMode (" + filterMode + ")");
 			}
 			text = pattern.replace(text, "");
 		}

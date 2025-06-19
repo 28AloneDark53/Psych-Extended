@@ -204,4 +204,7 @@ class BaseStage extends FlxBasic
 	}
 	inline private function get_camFollow():Dynamic return game.camFollow;
 	inline private function get_camFollowPos():FlxObject return game.camFollowPos;
+	inline public function camFollow_set(x:Float,y:Float){
+		camFollow.set(x,y);
+	}
 }

@@ -17,6 +17,7 @@ import objects.shape.FreeplayShape;
 import backend.*;
 
 import editors.ChartingState;
+import editors.ChartingStateNew;
 import options.OptionsState;
 
 class FreeplayStateNOVA extends MusicBeatState
@@ -513,8 +514,9 @@ class FreeplayStateNOVA extends MusicBeatState
 					eventPressCheck = true;
 					destroyFreeplayVocals();
 					FlxG.sound.music.stop();
-					ChartingState.isFreePlay = true;
-					LoadingState.loadAndSwitchState(new ChartingState());
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') ChartingStateNew.isFreePlay = true;
+					else ChartingState.isFreePlay = true;
+					CustomSwitchState.switchMenus('Charting', true);
 				}
 			case 4: 
 				if (Math.abs(lerpPosition - position) > 1) return;

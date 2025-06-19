@@ -210,7 +210,7 @@ class CurrentManager {
 			buttonExtra2 = control.newhbox.buttonExtra2;
 			buttonExtra3 = control.newhbox.buttonExtra3;
 			buttonExtra4 = control.newhbox.buttonExtra4;
-		} else if (ClientPrefs.data.hitboxmode != 'Classic') {
+		} else if (ClientPrefs.data.hitboxmode != 'Classic' && MobileControls.mode != KEYBOARD) {
 			buttonLeft = control.vpad.buttonLeft;
 			buttonDown = control.vpad.buttonDown;
 			buttonUp = control.vpad.buttonUp;

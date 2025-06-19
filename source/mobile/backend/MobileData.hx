@@ -131,7 +131,7 @@ typedef CustomHitboxData =
 
 typedef HitboxData =
 {
-	button:String, // what Hitbox Button should be used, must be a valid Hitbox Button var from NewHitbox as a string.
+	button:String, // what Hitbox Button should be used, must be a valid Hitbox Button var from Hitbox as a string.
 	//if custom ones isn't setted these will be used
 	x:Float, // the button's X position on screen.
 	y:Float, // the button's Y position on screen.
@@ -161,5 +161,6 @@ typedef ButtonsData =
 	graphic:String, // the graphic of the button, usually can be located in the VirtualPad xml .
 	x:Float, // the button's X position on screen.
 	y:Float, // the button's Y position on screen.
-	color:String // the button color, default color is white.
+	color:String, // the button color, default color is white.
+	bg:String // the button background for TouchPad, default background is `bg`.
 }

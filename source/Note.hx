@@ -335,6 +335,7 @@ class Note extends FlxSprite
 	var lastNoteScaleToo:Float = 1;
 	static var _lastValidChecked:String; //optimization
 	public var originalHeightForCalcs:Float = 6;
+	public var correctionOffset:Float = 0; //dont mess with this
 	public function reloadNote(?prefix:String = '', texture:String = '', postfix:String = '') {
 		if(prefix == null) prefix = '';
 		if (ClientPrefs.data.noteSkin == 'Default' && !ClientPrefs.data.useRGB) defaultNoteSkin = 'NOTE_assets';

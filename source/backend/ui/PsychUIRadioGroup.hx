@@ -1,5 +1,6 @@
 package backend.ui;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.FlxObject;
 
 class PsychUIRadioGroup extends FlxSpriteGroup
@@ -30,12 +31,12 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		
 		_hitbox = new FlxObject();
 
-		arrowUp = new FlxSprite().loadGraphic(Paths.image('psych-ui/arrow_up', 'embed'), true, 24, 18);
+		arrowUp = new FlxSprite().loadGraphic(Paths.image('psych-ui/arrow_up'), true, 24, 18);
 		arrowUp.animation.add('normal', [0]);
 		arrowUp.animation.add('press', [1]);
 		arrowUp.animation.play('normal');
 		arrowUp.visible = false;
-		arrowDown = new FlxSprite().loadGraphic(Paths.image('psych-ui/arrow_down', 'embed'), true, 24, 18);
+		arrowDown = new FlxSprite().loadGraphic(Paths.image('psych-ui/arrow_down'), true, 24, 18);
 		arrowDown.animation.add('normal', [0]);
 		arrowDown.animation.add('press', [1]);
 		arrowDown.animation.play('normal');
@@ -130,7 +131,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		var lastScroll:Int = curScroll;
 		if(maxItems > 0 && labels.length > maxItems)
 		{
-			curScroll = Std.int(Math.max(0, Math.min(labels.length - maxItems, v)));
+			curScroll = Std.int(FlxMath.bound(v, 0, labels.length - maxItems));
 			if(arrowUp != null && arrowUp.exists) 
 			{
 				arrowUp.visible = arrowUp.active = true;
@@ -173,7 +174,8 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 
 	function set_checked(v:Int)
 	{
-		checked = Std.int(Math.max(-1, Math.min(radios.length-1, v)));
+		checked = Std.int(FlxMath.bound(v, -1, Math.min(labels.length-1, radios.length-1)));
+		@:bypassAccessor checkedRadio = null;
 		for (num => radio in radios)
 		{
 			radio.checked = (num == checked);
@@ -186,6 +188,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 	{
 		labels = v;
 		updateRadioItems();
+		set_checked(checked);
 		set_curScroll(curScroll);
 		return labels;
 	}
@@ -193,6 +196,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 	function set_checkedRadio(v:PsychUIRadioItem)
 	{
 		checkedRadio = null;
+		@:bypassAccessor checked = -1;
 		for (num => radio in radios)
 		{
 			radio.checked = (v == radio);
@@ -324,7 +328,7 @@ class PsychUIRadioItem extends PsychUICheckBox
 	}
 	override function boxGraphic()
 	{
-		box.loadGraphic(Paths.image('psych-ui/radio', 'embed'), true, 16, 16);
+		box.loadGraphic(Paths.image('psych-ui/radio'), true, 16, 16);
 		box.animation.add('false', [0]);
 		box.animation.add('true', [1]);
 		box.animation.play('false');

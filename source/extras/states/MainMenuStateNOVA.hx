@@ -287,7 +287,7 @@ class MainMenuStateNOVA extends MusicBeatState
 		#end
 
 		#if TOUCH_CONTROLS
-		addMobilePad("UP_DOWN", "A_B_E_G");
+		addMobilePad("UP_DOWN", "SELECTOR_0.6.3");
 		_virtualpad.cameras = [camHUD];
 		#end
 	}
@@ -304,7 +304,7 @@ class MainMenuStateNOVA extends MusicBeatState
 
 		#if (debug && android)
 			if (FlxG.android.justReleased.BACK)
-			FlxG.debugger.visible = !FlxG.debugger.visible;
+				FlxG.debugger.visible = !FlxG.debugger.visible;
 		#end
 
 		if (ActionStatus != null)
@@ -321,10 +321,10 @@ class MainMenuStateNOVA extends MusicBeatState
 
 		if (FlxG.mouse.justPressed) usingMouse = true;
 
-		if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonG.justPressed #end) //use unused button
+		if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonSELECTOR.justPressed #end) //use unused button
 		{
 			persistentUpdate = false;
-			openSubState(new funkin.menus.ModSwitchMenu());
+			openSubState(new funkin.menus.CustomMenuModSwitchMenu());
 			#if TOUCH_CONTROLS removeVirtualPad(); #end
 		}
 
@@ -588,7 +588,7 @@ class MainMenuStateNOVA extends MusicBeatState
 		persistentUpdate = true;
 		#if TOUCH_CONTROLS
 		removeVirtualPad();
-		addMobilePad("UP_DOWN", "A_B_E_G");
+		addMobilePad("UP_DOWN", "SELECTOR_0.6.3");
 		#end
 		closeSubStatePost();
 	}

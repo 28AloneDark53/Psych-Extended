@@ -16,6 +16,7 @@ typedef ModsList = {
 
 class Mods
 {
+	static public var enabledMods:Array<String> = [];
 	static public var currentModDirectory:String = '';
 	public static var ignoreModFolders:Array<String> = [
 		'characters',
@@ -175,6 +176,7 @@ class Mods
 			trace(e);
 		}
 		#end
+		enabledMods = list.enabled; //for CustomMenuModSwitch
 		return list;
 	}
 	

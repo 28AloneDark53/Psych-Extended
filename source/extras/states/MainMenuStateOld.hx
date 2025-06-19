@@ -168,10 +168,10 @@ class MainMenuStateOld extends MusicBeatState
 		#if TOUCH_CONTROLS
 		#if PsychExtended_ExtraMainMenus
 		if (ClientPrefs.data.MainMenuStyle == '0.6.3')
-			addMobilePad("UP_DOWN", "A_B_E_G");
+			addMobilePad("UP_DOWN", "SELECTOR_0.6.3");
 		else
 		#end
-			addMobilePad("UP_DOWN", "A_B_E_C_M_G");
+			addMobilePad("UP_DOWN", "SELECTOR_EXTENDED");
 		#end
 	}
 
@@ -230,11 +230,11 @@ class MainMenuStateOld extends MusicBeatState
 				CustomSwitchState.switchMenus('Credits');
 			}
 
-			if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonG.justPressed #end) //use unused button
+			if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonSELECTOR.justPressed #end) //use unused button
 			{
 				#if TOUCH_CONTROLS removeMobilePad(); #end
 				persistentUpdate = false;
-				openSubState(new funkin.menus.ModSwitchMenu());
+				openSubState(new funkin.menus.CustomMenuModSwitchMenu());
 			}
 
 			if (controls.ACCEPT)
@@ -340,8 +340,8 @@ class MainMenuStateOld extends MusicBeatState
 		persistentUpdate = true;
 		#if TOUCH_CONTROLS
 		removeVirtualPad();
-		#if PsychExtended_ExtraMainMenus if (ClientPrefs.data.MainMenuStyle == '0.6.3') addMobilePad("UP_DOWN", "A_B_E_G");
-		else #end addMobilePad("UP_DOWN", "A_B_E_C_M_G");
+		#if PsychExtended_ExtraMainMenus if (ClientPrefs.data.MainMenuStyle == '0.6.3') addMobilePad("UP_DOWN", "SELECTOR_0.6.3");
+		else #end addMobilePad("UP_DOWN", "SELECTOR_EXTENDED");
 		#end
 		closeSubStatePost();
 	}

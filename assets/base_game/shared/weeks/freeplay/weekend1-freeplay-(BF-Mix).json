@@ -1,0 +1,21 @@
+{
+	"songs": [
+		["Darnell", "darnell", [95, 64, 166]]
+	],
+
+	"weekCharacters": [
+		"darnell",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "phillystreets",
+
+	"storyName": "Due Debts",
+	"weekBefore": "Weekend 1 Others",
+	"weekName": "Weekend 1 Boyfriend Mix",
+	"startUnlocked": true,
+
+	"hideStoryMode": true,
+	"hideFreeplay": false,
+	"difficulties": "Easy, Normal, Hard, (BF Mix)"
+}

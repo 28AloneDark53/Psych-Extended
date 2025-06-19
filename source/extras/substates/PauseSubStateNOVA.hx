@@ -1,6 +1,7 @@
 package extras.substates;
 
 import editors.ChartingState;
+import editors.ChartingStateNew;
 import options.OptionsState;
 
 import flixel.util.FlxStringUtil;
@@ -583,7 +584,7 @@ class PauseSubStateNOVA extends MusicBeatSubstate
 					PlayState.chartingMode = false;
 					FlxG.camera.followLerp = 0;
 				case 'Editor':
-					MusicBeatState.switchState(new ChartingState());
+					CustomSwitchState.switchMenus('Charting');
 					PlayState.chartingMode = true;
 			}
 		} else if (stayinMenu == 'debug') {
@@ -620,7 +621,8 @@ class PauseSubStateNOVA extends MusicBeatSubstate
 						function(trm:FlxTimer) restartSong()
 					);
 					PlayState.chartingMode = false;
-					ChartingState.curSec = 0;
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') ChartingStateNew.curSec = 0;
+					else ChartingState.curSec = 0;
 				case 'Back':
 					for (i in debugBars)
 						FlxTween.tween(i, {x: -1000}, 0.5, {ease: FlxEase.quartIn});

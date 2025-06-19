@@ -9,6 +9,7 @@ import MusicPlayer;
 import GameplayChangersSubstate;
 import ResetScoreSubState;
 import editors.ChartingState;
+import editors.ChartingStateNew;
 
 import haxe.Json;
 
@@ -17,10 +18,10 @@ class FreeplayState extends MusicBeatState
 	public var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
-	public static var curSelected:Int = 0;
+	private static var curSelected:Int = 0;
 	var lerpSelected:Float = 0;
 	var curDifficulty:Int = -1;
-	public static var lastDifficultyName:String = Difficulty.getDefault();
+	private static var lastDifficultyName:String = Difficulty.getDefault();
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -30,10 +31,10 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 
-	public var grpSongs:FlxTypedGroup<Alphabet>;
-	public var curPlaying:Bool = false;
+	private var grpSongs:FlxTypedGroup<Alphabet>;
+	private var curPlaying:Bool = false;
 
-	public var iconArray:Array<HealthIcon> = [];
+	private var iconArray:Array<HealthIcon> = [];
 
 	var bg:FlxSprite;
 	var intendedColor:Int;
@@ -51,8 +52,6 @@ class FreeplayState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-
-		super.create();
 
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
@@ -193,18 +192,19 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 
 		#if TOUCH_CONTROLS addVirtualPad("FULL", "A_B_C_X_Y_Z"); #end
+		
+		super.create();
 	}
 
 	override function closeSubState()
 	{
-		super.closeSubState();
 		changeSelection(0, false);
 		persistentUpdate = true;
 		#if TOUCH_CONTROLS
 		removeVirtualPad();
 		addVirtualPad("FULL", "A_B_C_X_Y_Z");
 		#end
-		closeSubStatePost();
+		super.closeSubState();
 	}
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
@@ -226,10 +226,11 @@ class FreeplayState extends MusicBeatState
 	var stopMusicPlay:Bool = false;
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
+		if(WeekData.weeksList.length < 1)
+			return;
 
 		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+			FlxG.sound.music.volume += 0.5 * elapsed;
 
 		lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 24)));
 		lerpRating = FlxMath.lerp(intendedRating, lerpRating, Math.exp(-elapsed * 12));
@@ -427,12 +428,13 @@ class FreeplayState extends MusicBeatState
 
 				trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
 			}
-			catch(e:Dynamic)
+			catch(e:haxe.Exception)
 			{
-				trace('ERROR! $e');
+				trace('ERROR! ${e.message}');
 
-				var errorStr:String = e.toString();
-				if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length-1); //Missing chart
+				var errorStr:String = e.message;
+				if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length-1); //Missing chart
+				else errorStr += '\n\n' + e.stack;
 
 				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
 				missingText.screenCenter(Y);
@@ -441,12 +443,11 @@ class FreeplayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 
 				updateTexts(elapsed);
-				super.update(elapsed);
 				return;
 			}
 
 			if (FlxG.keys.pressed.SHIFT #if TOUCH_CONTROLS || _virtualpad.buttonZ.pressed #end)
-				LoadingState.loadAndSwitchState(new ChartingState());
+				CustomSwitchState.switchMenus('Charting', true);
 			else {
 				if (ClientPrefs.data.loadingScreen && ClientPrefs.data.TransitionStyle == 'NovaFlare') {
 					FlxTransitionableState.skipNextTransIn = true;
@@ -472,13 +473,14 @@ class FreeplayState extends MusicBeatState
 		}
 
 		updateTexts(elapsed);
+		super.update(elapsed);
 	}
 
 	function getVocalFromCharacter(char:String)
 	{
 		try
 		{
-			var path:String = Paths.getPath('characters/$char.json', TEXT, null, true);
+			var path:String = Paths.getPath('characters/$char.json', TEXT);
 			#if MODS_ALLOWED
 			var character:Dynamic = Json.parse(File.getContent(path));
 			#else
@@ -486,6 +488,7 @@ class FreeplayState extends MusicBeatState
 			#end
 			return character.vocals_file;
 		}
+		catch (e:Dynamic) {}
 		return null;
 	}
 
@@ -508,8 +511,16 @@ class FreeplayState extends MusicBeatState
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		#end
 
-		lastDifficultyName = Difficulty.getString(curDifficulty);
 		var displayDiff:String = Difficulty.getString(curDifficulty);
+		//manual BF Mix Thing (Wait a mininute)
+		/*
+		if (displayDiff == "(BF Mix)" && songs[curSelected].songName != "Darnell") {
+			if (lastDifficultyName == "Easy") curDifficulty = 0;
+			if (lastDifficultyName == "Hard") curDifficulty = 2;
+		}
+		*/
+
+		lastDifficultyName = Difficulty.getString(curDifficulty);
 		if (Difficulty.list.length > 1)
 			diffText.text = '< ' + displayDiff.toUpperCase() + ' >';
 		else

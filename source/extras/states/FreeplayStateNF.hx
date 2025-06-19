@@ -1404,7 +1404,7 @@ class FreeplayStateNF extends MusicBeatState {
 					if(colorTween != null) colorTween.cancel();
 					if (rightcolor != null) rightcolor.cancel();
 					if (leftcolor != null) rightcolor.cancel();
-					LoadingState.loadAndSwitchState(new ChartingState());
+					CustomSwitchState.switchMenus('Charting', true);
 			}
 		}
 	}

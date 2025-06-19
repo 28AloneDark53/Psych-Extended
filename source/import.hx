@@ -23,6 +23,7 @@ import extras.states.*; //Extra States
 import extras.substates.*; //Extra Substates
 
 // 0.7x & 1.0 Support
+import editors.ChartingStateNew;
 import backend.PsychCamera;
 import objects.AudioDisplay;
 import objects.shape.ShapeEX;
@@ -49,6 +50,7 @@ import Achievements;
 // FlxAnimate
 #if flxanimate
 import flxanimate.*;
+import flxanimate.PsychFlxAnimate as FlxAnimate;
 #end
 
 #if sys

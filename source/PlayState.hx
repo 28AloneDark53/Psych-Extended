@@ -182,6 +182,7 @@ class PlayState extends MusicBeatState
 
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
+	public var camZoomingFrequency:Float = 4;
 	public var camZoomingDecay:Float = 1;
 	private var curSong:String = "";
 
@@ -247,6 +248,7 @@ class PlayState extends MusicBeatState
 	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
+	public var defaultStageZoom:Float = 1.05;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -463,6 +465,7 @@ class PlayState extends MusicBeatState
 		}
 
 		defaultCamZoom = stageData.defaultZoom;
+		defaultStageZoom = defaultCamZoom;
 		isPixelStage = stageData.isPixelStage;
 		BF_X = stageData.boyfriend[0];
 		BF_Y = stageData.boyfriend[1];
@@ -493,6 +496,7 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
+		new VSliceEvents(); //VSlice Events from P-Slice
 		switch (curStage)
 		{
 			case 'stage': new StageWeek1(); 			//Week 1
@@ -506,6 +510,17 @@ class PlayState extends MusicBeatState
 			case 'tank': new Tank();					//Week 7 - Ugh, Guns, Stress
 			case 'phillyStreets': new PhillyStreets(); 	//Weekend 1 - Darnell, Lit Up, 2Hot
 			case 'phillyBlazin': new PhillyBlazin();	//Weekend 1 - Blazin
+			//Erect Stages from P-Slice Engine (Remove the fucking ERECT_SONGS thing in project.xml and do not enable again)
+			#if ERECT_SONGS
+			case 'mainStageErect': new states.stages.erect.MainStageErect();			//Week 1 Special
+			case 'spookyMansionErect': new states.stages.erect.SpookyMansionErect();	//Week 2 Special
+			case 'phillyTrainErect': new states.stages.erect.PhillyTrainErect();  			//Week 3 Special
+			case 'limoRideErect': new states.stages.erect.LimoRideErect();  				//Week 4 Special
+			case 'mallXmasErect': new states.stages.erect.MallXmasErect(); 				//Week 5 Special
+			case 'schoolErect': new states.stages.erect.SchoolErect();						//Week 6 Special - Erect Mode
+			case 'schoolEvilErect': new states.stages.erect.SchoolEvilErect();				//Week 6 Special - Thorns
+			#end
+			case 'phillyStreetsErect': new states.stages.erect.PhillyStreetsErect();			//Weekend 1 (BF Mix)
 		}
 
 		if(isPixelStage) {
@@ -1548,23 +1563,31 @@ class PlayState extends MusicBeatState
 		//
 
 		var file:String = Paths.getPath('data/$songName/events.json', TEXT);
+		#if ERECT_SONGS
+		var songDifficulty:String = Difficulty.getString();
+		var fileErect:String = Paths.getPath('data/$songName/events-erect.json', TEXT);
+		var fileDiff:String = Paths.getPath('data/$songName/events-${songDifficulty}.json', TEXT);
+		if (FileSystem.exists(fileDiff)) file = fileDiff; //double check
+		#end
 		try
 		{
-			/* if (ClientPrefs.data.chartLoadSystem == '1.0x')
-			{ */
 			var eventsChart:SwagSong = Song.getChart('events', songName);
+
+			//get difficulty events (ignores the `events` file when difficulty events exists)
+			#if ERECT_SONGS
+			if (FileSystem.exists(fileDiff)) eventsChart = Song.getChart('events-${songDifficulty}', songName);
+			else if (!FileSystem.exists(fileDiff) && FileSystem.exists(fileErect))
+			{
+				var eventNameDiff:String = 'events-${songDifficulty.toLowerCase()}';
+				var eventNameNightmare:String = 'events-nightmare';
+				if (eventNameDiff == eventNameNightmare) eventsChart = Song.getChart('events-erect', songName);
+			}
+			#end
+
 			if(eventsChart != null)
 				for (event in eventsChart.events) //Event Notes
 					for (i in 0...event[1].length)
 						makeEvent(event, i);
-			/* }
-			else
-			{
-			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
-			for (event in eventsData) //Event Notes
-				for (i in 0...event[1].length)
-					makeEvent(event, i);
-			} */
 		}
 		catch(e:Dynamic) {}
 
@@ -1898,7 +1921,7 @@ class PlayState extends MusicBeatState
 	{
 		if(finishTimer != null) return;
 
-		trace('resynced vocals at ' + Math.floor(Conductor.songPosition));
+		//trace('resynced vocals at ' + Math.floor(Conductor.songPosition));
 
 		FlxG.sound.music.play();
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
@@ -1934,7 +1957,7 @@ class PlayState extends MusicBeatState
 			FlxG.camera.followLerp = 0;
 		else {
 			//this one can fix the camera issue
-			if (curStage == "phillyStreets" || curStage == "phillyBlazin") {
+			if (curStage == "phillyStreets" || curStage == "phillyBlazin" || curStage == "phillyStreetsErect") {
 				lerpVal = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
 				camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 			}
@@ -2333,7 +2356,7 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
 
-		MusicBeatState.switchState(new ChartingState());
+		CustomSwitchState.switchMenus('Charting');
 	}
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
@@ -3228,7 +3251,7 @@ class PlayState extends MusicBeatState
 		//trace('pressed: ' + controlArray);
 	}
 
-	function sortHitNotes(a:Note, b:Note):Int
+	public static function sortHitNotes(a:Note, b:Note):Int
 	{
 		if (a.lowPriority && !b.lowPriority)
 			return 1;
@@ -3741,7 +3764,8 @@ class PlayState extends MusicBeatState
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
 				moveCameraSection();
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms)
+			var vsliceCondition = (curBeat % camZoomingFrequency) == 0;
+			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms && !vsliceCondition)
 			{
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;

@@ -301,6 +301,11 @@ class StoryMenuState extends MusicBeatState
 			// I can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
 			var songArray:Array<String> = [];
 			var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
+
+			var checkErectSongs:Bool = (loadedWeeks[curWeek].erectSongs != null && loadedWeeks[curWeek].erectSongs != []);
+			if ((Difficulty.getString(curDifficulty) == "Erect" || Difficulty.getString(curDifficulty) == "Nightmare") && checkErectSongs)
+				leWeek = loadedWeeks[curWeek].erectSongs;
+
 			for (i in 0...leWeek.length) {
 				songArray.push(leWeek[i][0]);
 			}
@@ -401,6 +406,8 @@ class StoryMenuState extends MusicBeatState
 		#if !switch
 		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
 		#end
+
+		updateText(); //update text when difficulty is changed
 	}
 
 	var lerpScore:Int = 0;
@@ -475,8 +482,17 @@ class StoryMenuState extends MusicBeatState
 
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		var stringThing:Array<String> = [];
-		for (i in 0...leWeek.songs.length) {
-			stringThing.push(leWeek.songs[i][0]);
+
+		var checkErectSongs:Bool = (loadedWeeks[curWeek].erectSongs != null && loadedWeeks[curWeek].erectSongs != []);
+		if ((Difficulty.getString(curDifficulty) == "Erect" || Difficulty.getString(curDifficulty) == "Nightmare") && checkErectSongs) {
+			for (i in 0...leWeek.erectSongs.length) {
+				stringThing.push(leWeek.erectSongs[i][0]);
+			}
+		}
+		else {
+			for (i in 0...leWeek.songs.length) {
+				stringThing.push(leWeek.songs[i][0]); 
+			}
 		}
 
 		txtTracklist.text = '';

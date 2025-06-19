@@ -189,7 +189,7 @@ class TitleState extends MusicBeatState
 		#if FREEPLAY
 		CustomSwitchState.switchMenus('Freeplay');
 		#elseif CHARTING
-		MusicBeatState.switchState(new ChartingState());
+		CustomSwitchState.switchMenus('Charting');
 		#else
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;

@@ -288,7 +288,8 @@ class PauseSubState extends MusicBeatSubstate
 				case "Leave Charting Mode":
 					restartSong();
 					PlayState.chartingMode = false;
-					ChartingState.curSec = 0;
+					if (ClientPrefs.data.chartLoadSystem == '1.0x') ChartingStateNew.curSec = 0;
+					else ChartingState.curSec = 0;
 				case 'Skip Time':
 					if(curTime < Conductor.songPosition)
 					{
@@ -316,7 +317,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
 				case 'Chart Editor':
-					MusicBeatState.switchState(new editors.ChartingState());
+					CustomSwitchState.switchMenus('Charting');
 					PlayState.chartingMode = true;
 				case 'Options':
 					options.OptionsState.stateType = 3;

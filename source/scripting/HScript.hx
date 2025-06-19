@@ -280,7 +280,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"FunkinShader"	  => funkin.backend.shaders.FunkinShader,
 			"CustomShader"	  => funkin.backend.shaders.CustomShader,
 			"FunkinText"		=> funkin.backend.FunkinText,
-			"FlxAnimate"		=> flxanimate.FlxAnimate,
+			"FlxAnimate"		=> flxanimate.PsychFlxAnimate,
 			"Alphabet"		  => Alphabet,
 			"CoolUtil"		  => CoolUtil,
 		];
@@ -387,7 +387,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		});
 		set("__script__", this);
 
-		trace('Loading script at path \'${path}\'');
+		//trace('Loading script at path \'${path}\'');
 	}
 
 	/**

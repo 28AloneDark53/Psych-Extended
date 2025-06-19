@@ -6,9 +6,10 @@ import openfl.display.BitmapData;
 import openfl.utils.Assets;
 
 //More button support (Some buttons doesn't have a texture)
-@:build(mobile.macros.ButtonMacro.createVPadButtons(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]))
+@:build(mobile.macros.ButtonMacro.createVPadButtons(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","SELECTOR"]))
 @:build(mobile.macros.ButtonMacro.createExtraVPadButtons(30)) //Psych Extended Allows to Create 30 Extra Button with Json for now
-class MobilePad extends FlxSpriteGroup {
+@:access(mobile.objects.MobileButton)
+class MobilePad extends FlxTypedSpriteGroup<MobileButton> {
 	//DPad
 	public var buttonLeft:MobileButton = new MobileButton(0, 0);
 	public var buttonUp:MobileButton = new MobileButton(0, 0);
@@ -25,8 +26,9 @@ class MobilePad extends FlxSpriteGroup {
 	public var buttonCEDown:MobileButton = new MobileButton(0, 0);
 	public var buttonCEG:MobileButton = new MobileButton(0, 0);
 	
-	public var dPad:FlxSpriteGroup;
-	public var actions:FlxSpriteGroup;
+	public var dPad:FlxTypedSpriteGroup<MobileButton>;
+	public var actions:FlxTypedSpriteGroup<MobileButton>;
+	public var createdButtons:Array<String> = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","SELECTOR","Left","Up","Right","Down","Left2","Up2","Right2","Down2"];
 	
 	/**
 	 * Create a gamepad.
@@ -38,10 +40,10 @@ class MobilePad extends FlxSpriteGroup {
 	public function new(DPad:String, Action:String) {
 		super();
 
-		dPad = new FlxSpriteGroup();
+		dPad = new FlxTypedSpriteGroup<MobileButton>();
 		dPad.scrollFactor.set();
 
-		actions = new FlxSpriteGroup();
+		actions = new FlxTypedSpriteGroup<MobileButton>();
 		actions.scrollFactor.set();
 
 		if (DPad != "NONE")
@@ -60,12 +62,12 @@ class MobilePad extends FlxSpriteGroup {
 		if (Action != "NONE" && Action != "controlExtend")
 		{
 			if (!MobileData.actionModes.exists(Action))
-				throw 'The virtualPad actionMode "$Action" doesn\'t exists.';
+				throw 'The mobilePad actionMode "$Action" doesn\'t exists.';
 
 			for (buttonData in MobileData.actionModes.get(Action).buttons)
 			{
 				Reflect.setField(this, buttonData.button,
-					createMobileButton(buttonData.x, buttonData.y, buttonData.graphic, CoolUtil.colorFromString(buttonData.color)));
+					createMobileButton(buttonData.x, buttonData.y, buttonData.graphic, CoolUtil.colorFromString(buttonData.color), buttonData.bg));
 				actions.add(add(Reflect.field(this, buttonData.button)));
 			}
 		}
@@ -80,25 +82,28 @@ class MobilePad extends FlxSpriteGroup {
 		}
 	}
 
-	public function createMobileButton(x:Float, y:Float, Frames:String, ColorS:Int):Dynamic
+	public function createMobileButton(x:Float, y:Float, Frames:String, ColorS:Int, ?bg:String):Dynamic
 	{
-		if (ClientPrefs.data.mobilePadTexture == 'TouchPad') return createTouchButton(x, y, Frames, ColorS);
+		if (ClientPrefs.data.mobilePadTexture == 'TouchPad') return createTouchButton(x, y, Frames, ColorS, bg);
 		else return createVirtualButton(x, y, Frames, ColorS);
 	}
 
-	public function createTouchButton(x:Float, y:Float, Frames:String, ?ColorS:Int = 0xFFFFFF):MobileButton {
+	public function createTouchButton(x:Float, y:Float, Frames:String, ?ColorS:Int = 0xFFFFFF, ?bg:String):MobileButton {
+		var background:String = bg;
 		var button = new MobileButton(x, y);
 		button.label = new FlxSprite();
 		final buttonPath:Dynamic = Paths.image('mobile/MobileButton/TouchPad/' + ClientPrefs.data.mobilePadSkin + '/${Frames.toUpperCase()}');
-		final bgPath:Dynamic = Paths.image('mobile/MobileButton/TouchPad/' + ClientPrefs.data.mobilePadSkin + '/bg');
+		final bgPath:Dynamic = Paths.image('mobile/MobileButton/TouchPad/' + ClientPrefs.data.mobilePadSkin + '/${bg.toUpperCase()}');
 
-		if (Frames == "modding" && FileSystem.exists(buttonPath)) button.loadGraphic(buttonPath);
-		if (Frames == "modding" && !FileSystem.exists(buttonPath)) button.loadGraphic(Paths.image('mobile/MobileButton/TouchPad/original/${Frames.toUpperCase()}'));
+		if (bg != null && FileSystem.exists(bgPath)) button.loadGraphic(bgPath);
+		else if (bg != null && !FileSystem.exists(bgPath)) button.loadGraphic(Paths.image('mobile/MobileButton/TouchPad/original/${bg.toUpperCase()}'));
 		else if (FileSystem.exists(bgPath)) button.loadGraphic(bgPath);
 		else button.loadGraphic(Paths.image('mobile/MobileButton/TouchPad/original/bg'));
 
-		if (Frames != "modding" && FileSystem.exists(buttonPath)) button.label.loadGraphic(buttonPath);
-		else if (Frames != "modding" && !FileSystem.exists(buttonPath)) button.label.loadGraphic(Paths.image('mobile/MobileButton/TouchPad/original/${Frames.toUpperCase()}'));
+		if (bg == null) {
+			if (FileSystem.exists(buttonPath)) button.label.loadGraphic(buttonPath);
+			else if (!FileSystem.exists(buttonPath)) button.label.loadGraphic(Paths.image('mobile/MobileButton/TouchPad/original/${Frames.toUpperCase()}'));
+		}
 
 		button.scale.set(0.243, 0.243);
 		button.updateHitbox();

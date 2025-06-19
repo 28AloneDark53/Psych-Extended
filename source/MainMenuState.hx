@@ -142,7 +142,7 @@ class MainMenuState extends MusicBeatState
     	#end
 
 		#if TOUCH_CONTROLS
-		addMobilePad("NONE", "G_E");
+		addMobilePad("NONE", "SELECTOR_1.0");
 		_virtualpad.alpha = 1;
 		#end
 
@@ -362,11 +362,11 @@ class MainMenuState extends MusicBeatState
 				#if HIDE_CURSOR FlxG.mouse.visible = false; #end
 				CustomSwitchState.switchMenus('MasterEditor');
 			}
-			else if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonG.justPressed #end) //use unused button
+			else if (FlxG.keys.justPressed.TAB #if TOUCH_CONTROLS || _virtualpad.buttonSELECTOR.justPressed #end) //use unused button
 			{
 				#if TOUCH_CONTROLS removeMobilePad(); #end
 				persistentUpdate = false;
-				openSubState(new funkin.menus.ModSwitchMenu());
+				openSubState(new funkin.menus.CustomMenuModSwitchMenu());
 			}
 		}
 	}
@@ -408,7 +408,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = true;
 		#if TOUCH_CONTROLS
 		removeVirtualPad();
-		addMobilePad("NONE", "G_E");
+		addMobilePad("NONE", "SELECTOR_1.0");
 		_virtualpad.alpha = 1;
 		#end
 		super.closeSubState();

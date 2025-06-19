@@ -1,0 +1,20 @@
+{
+  "buttons": [
+    {
+      "button": "buttonE",
+      "graphic": "modding",
+      "x": 1148,
+      "y": 339,
+      "color": "-1",
+      "bg": "modding"
+    },
+    {
+      "button": "buttonSELECTOR",
+      "graphic": "selector",
+      "x": 1022,
+      "y": 339,
+      "color": "1",
+      "bg": "selector"
+    }
+  ]
+}

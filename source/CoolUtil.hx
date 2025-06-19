@@ -15,6 +15,9 @@ import openfl.utils.Assets;
 #end
 import haxe.Json;
 
+#if cpp
+@:cppFileCode('#include <thread>')
+#end
 class CoolUtil
 {
 	inline public static function quantize(f:Float, snap:Float){
@@ -409,5 +412,15 @@ class CoolUtil
 
 	@:noUsing public static inline function getMacroAbstractClass(className:String) {
 		return Type.resolveClass('${className}_HSC');
+	}
+
+	#if cpp
+	@:functionCode('
+		return std::thread::hardware_concurrency();
+	')
+	#end
+	public static function getCPUThreadsCount():Int
+	{
+		return 1;
 	}
 }

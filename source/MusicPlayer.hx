@@ -4,6 +4,8 @@ import flixel.group.FlxGroup;
 import flixel.ui.FlxBar;
 import flixel.util.FlxStringUtil;
 
+import FreeplayState;
+
 /**
  * Music player used for Freeplay
  */
@@ -176,7 +178,7 @@ class MusicPlayer extends FlxGroup
 				setPlaybackRate();
 			}
 		}
-
+	
 		if (#if TOUCH_CONTROLS instance._virtualpad.buttonC.justPressed || #end controls.RESET)
 		{
 			playbackRate = 1;
