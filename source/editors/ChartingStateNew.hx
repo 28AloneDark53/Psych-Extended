@@ -545,8 +545,10 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 		#end
 		fullTipText.screenCenter();
 		add(fullTipText);
+		#if TOUCH_CONTROLS
 		addMobilePad('CHART_EDITOR', 'CHART_EDITOR_NEW');
 		addMobilePadCamera();
+		#end
 		super.create();
 	}
 
@@ -781,25 +783,28 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		var lastTime:Float = Conductor.songPosition;
 		outputAlpha = Math.max(0, outputAlpha - elapsed);
-		var holdingAlt:Bool = _virtualpad.buttonG.justPressed || FlxG.keys.pressed.ALT;
+		var holdingAlt:Bool = #if TOUCH_CONTROLS _virtualpad.buttonG.justPressed || #end FlxG.keys.pressed.ALT;
 		if(FlxG.sound.music != null)
 		{
 			if(PsychUIInputText.focusOn == null) //If not typing anything
 			{
-				if(_virtualpad.buttonC.justPressed || FlxG.keys.justPressed.F12)
+				if(#if TOUCH_CONTROLS _virtualpad.buttonC.justPressed || #end FlxG.keys.justPressed.F12)
 				{
 					super.update(elapsed);
 					openEditorPlayState();
 					lastFocus = PsychUIInputText.focusOn;
 					return;
 				}
-				else if(_virtualpad.buttonF.justPressed || FlxG.keys.justPressed.F1)
+				else if(#if TOUCH_CONTROLS _virtualpad.buttonF.justPressed || #end FlxG.keys.justPressed.F1)
 				{
+					#if TOUCH_CONTROLS
 					changeMobileControlVisible("F", !checkMobileControlVisible("F"));
+					#end
 					var vis:Bool = !fullTipText.visible;
 					tipBg.visible = tipBg.active = fullTipText.visible = fullTipText.active = vis;
 				}
 
+				#if TOUCH_CONTROLS
 				if (_virtualpad.buttonG.justPressed)
 				{
 					if(playbackRate != 1)
@@ -809,6 +814,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 					}
 					playbackSlider.value = playbackRate;
 				}
+				#end
 
 				var goingBack:Bool = false;
 				if(FlxG.keys.pressed.RBRACKET || (FlxG.keys.pressed.LBRACKET && (goingBack = true)))
@@ -906,14 +912,14 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 
 					softReloadNotes(true);
 				}
-				else if(_virtualpad.buttonLeft.justPressed || FlxG.keys.justPressed.A != _virtualpad.buttonRight.justPressed || FlxG.keys.justPressed.D && !holdingAlt)
+				else if(#if TOUCH_CONTROLS _virtualpad.buttonLeft.justPressed || _virtualpad.buttonRight.justPressed || #end FlxG.keys.justPressed.A || FlxG.keys.justPressed.D && !holdingAlt)
 				{
 					if(FlxG.sound.music.playing)
 						setSongPlaying(false);
 
-					var shiftAdd:Int = (_virtualpad.buttonY.pressed || FlxG.keys.pressed.SHIFT ? 4 : 1);
+					var shiftAdd:Int = (#if TOUCH_CONTROLS _virtualpad.buttonY.pressed || #end FlxG.keys.pressed.SHIFT ? 4 : 1);
 
-					if(_virtualpad.buttonLeft.justPressed || FlxG.keys.justPressed.A)
+					if(#if TOUCH_CONTROLS _virtualpad.buttonLeft.justPressed || #end FlxG.keys.justPressed.A)
 					{
 						if(curSec - shiftAdd < 0) shiftAdd = curSec;
 
@@ -923,7 +929,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 							Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] - Conductor.offset + 0.000001;
 						}
 					}
-					else if(_virtualpad.buttonRight.justPressed || FlxG.keys.justPressed.D)
+					else if(#if TOUCH_CONTROLS _virtualpad.buttonRight.justPressed || #end FlxG.keys.justPressed.D)
 					{
 						if(curSec + shiftAdd >= PlayState.SONG.notes.length) shiftAdd = PlayState.SONG.notes.length - curSec - 1;
 						
@@ -953,7 +959,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 					else loadSection(0);
 					Conductor.songPosition = FlxG.sound.music.time = vocals.time = opponentVocals.time = timeToGoBack;
 				}
-				else if(_virtualpad.buttonUp.pressed || FlxG.keys.pressed.W != _virtualpad.buttonDown.pressed || FlxG.keys.pressed.S || FlxG.mouse.wheel != 0)
+				else if(#if TOUCH_CONTROLS _virtualpad.buttonUp.pressed || _virtualpad.buttonDown.pressed || #end FlxG.keys.pressed.W || FlxG.keys.pressed.S || FlxG.mouse.wheel != 0)
 				{
 					if(FlxG.sound.music.playing)
 						setSongPlaying(false);
@@ -961,24 +967,24 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 					if(mouseSnapCheckBox.checked && FlxG.mouse.wheel != 0)
 					{
 						var snap:Float = Conductor.stepCrochet / (curQuant/16) / curZoom;
-						var timeAdd:Float = (_virtualpad.buttonY.pressed || FlxG.keys.pressed.SHIFT ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
+						var timeAdd:Float = (#if TOUCH_CONTROLS _virtualpad.buttonY.pressed || #end FlxG.keys.pressed.SHIFT ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
 						var time:Float = Math.round((FlxG.sound.music.time + timeAdd) / snap) * snap;
 						if(time > 0) time += 0.000001; //goes at the start of a section more properly
 						FlxG.sound.music.time = time;
 					}
 					else
 					{
-						var speedMult:Float = (_virtualpad.buttonY.pressed || FlxG.keys.pressed.SHIFT ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
-						if(_virtualpad.buttonUp.pressed || FlxG.keys.pressed.W || FlxG.mouse.wheel > 0)
+						var speedMult:Float = (#if TOUCH_CONTROLS _virtualpad.buttonY.pressed || #end FlxG.keys.pressed.SHIFT ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
+						if(#if TOUCH_CONTROLS _virtualpad.buttonUp.pressed || #end FlxG.keys.pressed.W || FlxG.mouse.wheel > 0)
 							FlxG.sound.music.time -= Conductor.crochet * speedMult * 1.5 * elapsed / curZoom;
-						else if(_virtualpad.buttonDown.pressed || FlxG.keys.pressed.S || FlxG.mouse.wheel < 0)
+						else if(#if TOUCH_CONTROLS _virtualpad.buttonDown.pressed || #end FlxG.keys.pressed.S || FlxG.mouse.wheel < 0)
 							FlxG.sound.music.time += Conductor.crochet * speedMult * 1.5 * elapsed / curZoom;
 					}
 
 					FlxG.sound.music.time = FlxMath.bound(FlxG.sound.music.time, 0, FlxG.sound.music.length - 1);
 					if(FlxG.sound.music.playing) setSongPlaying(!FlxG.sound.music.playing);
 				}
-				else if(_virtualpad.buttonX.justPressed || FlxG.keys.justPressed.SPACE)
+				else if(#if TOUCH_CONTROLS _virtualpad.buttonX.justPressed || #end FlxG.keys.justPressed.SPACE)
 				{
 					setSongPlaying(!FlxG.sound.music.playing);
 				}
@@ -1013,7 +1019,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 		{
 			var doCut:Bool = false;
 			var canContinue:Bool = true;
-			if(_virtualpad.buttonA.justPressed || FlxG.keys.justPressed.ENTER)
+			if(#if TOUCH_CONTROLS _virtualpad.buttonA.justPressed || #end FlxG.keys.justPressed.ENTER)
 			{
 				goToPlayState();
 				return;
@@ -1144,9 +1150,9 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 						curQuant = quantizations[Std.int(Math.min(quantizations.indexOf(curQuant) + 1, quantizations.length - 1))];
 					forceDataUpdate = true;
 				}
-				else if(_virtualpad.buttonV.justPressed || FlxG.keys.justPressed.Z != _virtualpad.buttonD.justPressed || FlxG.keys.justPressed.X) //Decrease/Increase Zoom
+				else if(#if TOUCH_CONTROLS _virtualpad.buttonV.justPressed || _virtualpad.buttonD.justPressed || #end FlxG.keys.justPressed.Z || FlxG.keys.justPressed.X) //Decrease/Increase Zoom
 				{
-					if(_virtualpad.buttonV.justPressed || FlxG.keys.justPressed.Z)
+					if(#if TOUCH_CONTROLS _virtualpad.buttonV.justPressed || #end FlxG.keys.justPressed.Z)
 						curZoom = zoomList[Std.int(Math.max(zoomList.indexOf(curZoom) - 1, 0))];
 					else
 						curZoom = zoomList[Std.int(Math.min(zoomList.indexOf(curZoom) + 1, zoomList.length - 1))];
@@ -1249,8 +1255,10 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 				{
 					var diffX:Float = touch.x - gridBg.x;
 					var diffY:Float = touch.y - gridBg.y;
+					#if TOUCH_CONTROLS
 					if(!_virtualpad.buttonY.pressed)
 						diffY -= diffY % (GRID_SIZE / (curQuant/16));
+					#end
 		
 					if(nextGridBg.visible) diffY = Math.min(diffY, gridBg.height + nextGridBg.height);
 					else diffY = Math.min(diffY, gridBg.height);
@@ -1264,7 +1272,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 					if(SHOW_EVENT_COLUMN)
 						noteData--;
 		
-					if(_virtualpad.buttonY.pressed || touch.y >= gridBg.y || !prevGridBg.visible)
+					if(#if TOUCH_CONTROLS _virtualpad.buttonY.pressed || #end touch.y >= gridBg.y || !prevGridBg.visible)
 						dummyArrow.y = gridBg.y + diffY;
 					else
 					{
@@ -1355,7 +1363,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 							var closest = closeNotes[0];
 							if(closest != null && (!closest.isEvent || !lockedEvents))
 							{
-								if(_virtualpad.buttonH.pressed || holdingAlt) // Select Note/Event
+								if(#if TOUCH_CONTROLS _virtualpad.buttonH.pressed || #end holdingAlt) // Select Note/Event
 								{
 									var sel = selectedNotes.copy();
 									if(!selectedNotes.contains(closest))
@@ -1363,7 +1371,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 										selectedNotes.push(closest);
 										addUndoAction(SELECT_NOTE, {old: sel, current: selectedNotes.copy()});
 									}
-									else if(!_virtualpad.buttonH.pressed || !holdingAlt)
+									else if(#if TOUCH_CONTROLS !_virtualpad.buttonH.pressed || #end !holdingAlt)
 									{
 										resetSelectedNotes();
 										selectedNotes.remove(closest);
@@ -1452,7 +1460,7 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 				}
 				else if(!ignoreClickForThisFrame)
 				{
-					if(touch.justPressed && !_virtualpad.buttonH.pressed)
+					if(touch.justPressed #if TOUCH_CONTROLS && !_virtualpad.buttonH.pressed #end)
 						resetSelectedNotes();
 		
 					dummyArrow.visible = false;
@@ -1748,9 +1756,9 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 			var sineValue:Float = 0.75 + Math.cos(Math.PI * noteSelectionSine * (isMovingNotes ? 8 : 2)) / 4;
 			//trace(sineValue);
 
-			var qPress = (_virtualpad.buttonUp2.justPressed || FlxG.keys.justPressed.Q);
-			var ePress = (_virtualpad.buttonDown2.justPressed || FlxG.keys.justPressed.E);
-			var addSus = (_virtualpad.buttonY.pressed || FlxG.keys.pressed.SHIFT ? 4 : 1) * (Conductor.stepCrochet / 2);
+			var qPress = (#if TOUCH_CONTROLS _virtualpad.buttonUp2.justPressed || #end FlxG.keys.justPressed.Q);
+			var ePress = (#if TOUCH_CONTROLS _virtualpad.buttonDown2.justPressed || #end FlxG.keys.justPressed.E);
+			var addSus = (#if TOUCH_CONTROLS _virtualpad.buttonY.pressed || #end FlxG.keys.pressed.SHIFT ? 4 : 1) * (Conductor.stepCrochet / 2);
 			if(qPress) addSus *= -1;
 
 			if(qPress != ePress && selectedNotes.length != 1)
@@ -5088,7 +5096,9 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 		openSubState(new EditorPlayState(cast notes, [vocals, opponentVocals]));
 		upperBox.isMinimized = true;
 		upperBox.visible = mainBox.visible = infoBox.visible = false;
+		#if TOUCH_CONTROLS
 		_virtualpad.visible = false;
+		#end
 	}
 
 	function goToPlayState()
@@ -5113,7 +5123,9 @@ class ChartingStateNew extends MusicBeatState implements PsychUIEventHandler.Psy
 
 	override function closeSubState()
 	{
+		#if TOUCH_CONTROLS
 		if (!_virtualpad.visible) _virtualpad.visible = true;
+		#end
 		persistentUpdate = true;
 		ClientPrefs.toggleVolumeKeys(true);
 		super.closeSubState();

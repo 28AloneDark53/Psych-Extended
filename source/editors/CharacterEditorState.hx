@@ -905,7 +905,7 @@ class CharacterEditorState extends MusicBeatState
 			FlxG.camera.zoom += elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
 			if(FlxG.camera.zoom > 3) FlxG.camera.zoom = 3;
 		}
-		else if ((FlxG.keys.pressed.Q || #if TOUCH_CONTROLS _virtualpad.buttonY.pressed #end) && FlxG.camera.zoom > 0.1) {
+		else if ((FlxG.keys.pressed.Q #if TOUCH_CONTROLS || _virtualpad.buttonY.pressed #end) && FlxG.camera.zoom > 0.1) {
 			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
 			if(FlxG.camera.zoom < 0.1) FlxG.camera.zoom = 0.1;
 		}
@@ -916,8 +916,8 @@ class CharacterEditorState extends MusicBeatState
 		var changedAnim:Bool = false;
 		if(anims.length > 1)
 		{
-			if((FlxG.keys.justPressed.W  || #if TOUCH_CONTROLS _virtualpad.buttonV.justPressed #end) && (changedAnim = true)) curAnim--;
-			else if((FlxG.keys.justPressed.S || #if TOUCH_CONTROLS _virtualpad.buttonD.justPressed #end) && (changedAnim = true)) curAnim++;
+			if((FlxG.keys.justPressed.W #if TOUCH_CONTROLS || _virtualpad.buttonV.justPressed #end) && (changedAnim = true)) curAnim--;
+			else if((FlxG.keys.justPressed.S #if TOUCH_CONTROLS || _virtualpad.buttonD.justPressed #end) && (changedAnim = true)) curAnim++;
 
 			if(changedAnim)
 			{
@@ -1103,7 +1103,7 @@ class CharacterEditorState extends MusicBeatState
 		if(FlxG.keys.justPressed.F12 #if TOUCH_CONTROLS || _virtualpad.buttonS.justPressed #end)
 			silhouettes.visible = !silhouettes.visible;
 
-		if((FlxG.keys.justPressed.F1 || #if TOUCH_CONTROLS _virtualpad.buttonF.justPressed #end)|| (helpBg.visible && FlxG.keys.justPressed.ESCAPE))
+		if((FlxG.keys.justPressed.F1 #if TOUCH_CONTROLS || _virtualpad.buttonF.justPressed #end)|| (helpBg.visible && FlxG.keys.justPressed.ESCAPE))
 		{
 			#if TOUCH_CONTROLS
 			changeMobileControlVisible("F", !checkMobileControlVisible("F"));

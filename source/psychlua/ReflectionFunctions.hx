@@ -86,7 +86,6 @@ class ReflectionFunctions
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
 			@:privateAccess
 			//Little 0.7x File Organization Support (Now You Can Play Funkindelix Psych 0.7x Port Fully Functional)
-			var extraControl = MusicBeatState.mobilec.current;
 			if (classVar.startsWith('backend.')) classVar = classVar.replace('backend.', '');
 			if (classVar.startsWith('objects.')) classVar = classVar.replace('objects.', '');
 			if (classVar.startsWith('states.')) classVar = classVar.replace('states.', '');
@@ -102,6 +101,7 @@ class ReflectionFunctions
 			var variableplus:String = varCheck(myClass, variable);
 			var killMe:Array<String> = variable.split('.');
 			#if TOUCH_CONTROLS
+			var extraControl = MusicBeatState.mobilec.current;
 			if (MusicBeatState.mobilec != null && myClass == 'flixel.FlxG' && variableplus.indexOf('key') != -1 && extraControl.buttonExtra1 != null && extraControl.buttonExtra2 != null && extraControl.buttonExtra3 != null && extraControl.buttonExtra4 != null){
 				var check:Dynamic;
 				check = specialKeyCheck(variableplus); //fuck you old lua 🙃

@@ -67,7 +67,7 @@
 	<define name="PsychExtended_ExtraPauseMenus" unless="extras_disabled"/> <!-- DELETE THIS IF YOU WANT TO REMOVE EXTRA PAUSE MENUS IN YOUR BUILD -->
 	<define name="PsychExtended_ExtraTransitions" unless="extras_disabled"/> <!-- DELETE THIS IF YOU WANT TO REMOVE EXTRA TRANSITIONS MENUS IN YOUR BUILD -->
 	<define name="PsychExtended_ExtraFPSCounters" unless="extras_disabled"/> <!-- DELETE THIS IF YOU WANT TO REMOVE EXTRA FPS COUNTERS IN YOUR BUILD -->
-	<define name="TOUCH_CONTROLS" if="mobile" /> <!-- DELETE THIS IF YOU WANT TO REMOVE TOUCH CONTROLS -->
+
 	
 
 	<section if="TOUCH_CONTROLS">

@@ -176,7 +176,9 @@ class EditorPlayState extends MusicBeatSubstate
 	{
 		if(#if android FlxG.android.justReleased.BACK #else touchPad.buttonP.justPressed #end || FlxG.keys.justPressed.ESCAPE)
 		{
+			#if TOUCH_CONTROLS
 			MusicBeatState.mobilec.visible = false;
+			#end
 			endSong();
 			super.update(elapsed);
 			return;

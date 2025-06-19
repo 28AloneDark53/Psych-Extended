@@ -28,23 +28,6 @@ class MusicBeatState extends FlxUIState
 	private var curDecStep:Float = 0;
 	private var curDecBeat:Float = 0;
 
-	public function checkMobileControlVisible(selectedButton:String) {
-		var buttonsVisible:Bool = false;
-		for (button in _virtualpad.createdButtons) {
-			var buttonName:String = "button" + button;
-			var buttonVisibility:Bool = Reflect.getProperty(_virtualpad, buttonName).visible;
-			if (button != selectedButton && buttonsVisible != buttonVisibility) buttonsVisible = buttonVisibility;
-		}
-		return buttonsVisible;
-	}
-
-	public function changeMobileControlVisible(selectedButton:String, ?visible:Bool = false) {
-		for (button in _virtualpad.createdButtons) {
-			var buttonName:String = "button" + button;
-			if (button != selectedButton) Reflect.getProperty(_virtualpad, buttonName).visible = visible;
-		}
-	}
-
 	public function resetMusicVars()
 	{
 		curSection = 0;
@@ -71,6 +54,23 @@ class MusicBeatState extends FlxUIState
 
 	var trackedinputsUI:Array<FlxActionInput> = [];
 	var trackedinputsNOTES:Array<FlxActionInput> = [];
+
+	public function checkMobileControlVisible(selectedButton:String) {
+		var buttonsVisible:Bool = false;
+		for (button in _virtualpad.createdButtons) {
+			var buttonName:String = "button" + button;
+			var buttonVisibility:Bool = Reflect.getProperty(_virtualpad, buttonName).visible;
+			if (button != selectedButton && buttonsVisible != buttonVisibility) buttonsVisible = buttonVisibility;
+		}
+		return buttonsVisible;
+	}
+
+	public function changeMobileControlVisible(selectedButton:String, ?visible:Bool = false) {
+		for (button in _virtualpad.createdButtons) {
+			var buttonName:String = "button" + button;
+			if (button != selectedButton) Reflect.getProperty(_virtualpad, buttonName).visible = visible;
+		}
+	}
 
 	public function addMobilePad(?DPad:String, ?Action:String) {
 		if (_virtualpad != null)
