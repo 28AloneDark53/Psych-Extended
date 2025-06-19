@@ -20,7 +20,7 @@ haxelib git hxCodec https://github.com/PsychExtendedThings/hxCodec-0.6.3 --globa
 haxelib git hxcpp https://github.com/PsychExtendedThings/hxcpp --global
 haxelib git lime https://github.com/PsychExtendedThings/lime-new --global
 haxelib install openfl 9.3.3 --global
-haxelib git flxanimate https://github.com/ShadowMario/flxanimate.git dev --global
+haxelib git flxanimate https://github.com/Psych-Slice/FlxAnimate.git 42f1b5d193b4345ca7d6933380ab3105985b44a3 --global
 haxelib git funkin.vis https://github.com/beihu235/funkVis-FrequencyFixed main --global
 haxelib git grig.audio https://gitlab.com/haxe-grig/grig.audio.git 57f5d47f2533fd0c3dcd025a86cb86c0dfa0b6d2 --global
 echo Setting dependencies...
